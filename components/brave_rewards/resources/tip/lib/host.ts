@@ -4,6 +4,8 @@
 
 import { OnboardingCompletedStore } from '../../shared/lib/onboarding_completed_store'
 
+import { tippingDisabledForBAP } from '../../shared/components/bap_deprecation'
+
 import { createStateManager } from './state_manager'
 
 import {
@@ -147,6 +149,13 @@ export function createHost (): Host {
 
     onlyAnonWalletUpdated (onlyAnonWallet: boolean) {
       stateManager.update({ onlyAnonWallet })
+      if (tippingDisabledForBAP(onlyAnonWallet)) {
+        stateManager.update({
+          hostError: {
+            type: 'ERR_TIPPING_DISABLED'
+          }
+        })
+      }
     },
 
     recurringTipRemoved (success: boolean) {

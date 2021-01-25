@@ -13,6 +13,7 @@
 
 #include "base/guid.h"
 #include "bat/ledger/global_constants.h"
+#include "bat/ledger/option_keys.h"
 #include "bat/ledger/internal/common/time_util.h"
 #include "bat/ledger/internal/contribution/contribution.h"
 #include "bat/ledger/internal/contribution/contribution_util.h"
@@ -148,6 +149,12 @@ void Contribution::ResetReconcileStamp() {
 }
 
 void Contribution::StartMonthlyContribution() {
+  if (ledger_->ledger_client()->GetBooleanOption(
+      option::kContributionsDisabledForBAPMigration)) {
+    BLOG(1, "Monthly contributions disabled for BAP migration");
+    return;
+  }
+
   const auto reconcile_stamp = ledger_->state()->GetReconcileStamp();
   ResetReconcileStamp();
 
@@ -272,6 +279,12 @@ void Contribution::OneTimeTip(
     const std::string& publisher_key,
     const double amount,
     ledger::ResultCallback callback) {
+  if (ledger_->ledger_client()->GetBooleanOption(
+      option::kContributionsDisabledForBAPMigration)) {
+    BLOG(1, "One-time tips disabled for BAP migration");
+    callback(type::Result::LEDGER_ERROR);
+    return;
+  }
   tip_->Process(publisher_key, amount, callback);
 }
 

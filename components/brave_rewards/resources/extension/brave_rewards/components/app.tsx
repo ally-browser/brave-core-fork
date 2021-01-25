@@ -7,6 +7,8 @@ import { bindActionCreators, Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { getTabData } from '../background/api/tabs_api'
 
+import { BAPDeprecationPopup } from '../../../shared/components/bap_deprecation'
+
 // Components
 import Panel from './panel'
 
@@ -174,6 +176,29 @@ export class RewardsPanel extends React.Component<Props, State> {
   }
 
   render () {
+    if (/^#?bap-deprecation$/i.test(window.location.hash)) {
+      const onClose = () => {
+        window.close()
+      }
+
+      const onLearnMore = () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const [tab] = tabs
+          const targetURL = 'chrome://newtab#bap-deprecation'
+          if (tab.id && /^chrome:\/\/newtab(\/|$)/i.test(tab.url || '')) {
+            chrome.tabs.update(tab.id, { url: targetURL })
+          } else {
+            chrome.tabs.create({ url: targetURL })
+          }
+          window.close()
+        })
+      }
+
+      return (
+        <BAPDeprecationPopup onClose={onClose} onLearnMore={onLearnMore} />
+      )
+    }
+
     return (
       <Panel
         tabId={this.state.tabId}

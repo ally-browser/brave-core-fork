@@ -17,6 +17,7 @@ export function AppError (props: Props) {
   const { hostError } = props
   const locale = React.useContext(LocaleContext)
 
+  // TODO(zenparsing): Add graphic and text for ERR_TIPPING_DISABLED
   const isConnectionError = hostError.type === 'ERR_FETCH_BALANCE'
 
   return (

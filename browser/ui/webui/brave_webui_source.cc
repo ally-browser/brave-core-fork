@@ -252,6 +252,9 @@ void CustomizeWebUIHTMLSource(const std::string &name,
         { "editCardsTitle", IDS_EDIT_CARDS_TITLE },
         { "tosAndPp", IDS_REWARDS_WIDGET_TOS_AND_PP},     // NOLINT
         { "rewardsWidgetStartUsing", IDS_REWARDS_WIDGET_START_USING},     // NOLINT
+        // Rewards BAP Deprecation Alert
+        { "bapDeprecationHeader", IDS_REWARDS_BAP_DEPRECATION_HEADER },
+        { "bapDeprecationAlertText", IDS_REWARDS_BAP_DEPRECATION_ALERT_TEXT },
         // Together Widget
         { "togetherWidgetTitle", IDS_TOGETHER_WIDGET_TITLE },
         { "togetherWidgetWelcomeTitle", IDS_TOGETHER_WIDGET_WELCOME_TITLE },
