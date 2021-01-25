@@ -57,9 +57,16 @@
   <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_TITLE" desc="Name of the setting to enable Live Caption feature.">
     Live Caption
   </message>
-  <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_SUBTITLE" desc="Description text for Live Caption feature. When media is playing (such as a video) the user will see captions on the screen. Only works in Brave browser initially.">
-    Automatically creates captions for media in Brave browser (currently available in English only)
-  </message>
+  <if expr="chromeos">
+    <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_SUBTITLE" desc="Description text for Live Caption feature. When audio or video is playing, the user will see captions on the screen. Only works in Brave browser initially. Currently only works for English media.">
+      Automatically creates captions for English audio and video (currently available in Brave browser only). Audio and captions never leave your device.
+    </message>
+  </if>
+  <if expr="not chromeos">
+    <message name="IDS_SETTINGS_CAPTIONS_ENABLE_LIVE_CAPTION_SUBTITLE" desc="Description text for Live Caption feature. When audio or video is playing, the user will see captions on the screen. Currently only works for English media.">
+      Automatically creates captions for English audio and video. Audio and captions never leave your device.
+    </message>
+  </if>
   <message name="IDS_SETTINGS_CAPTIONS_LIVE_CAPTION_DOWNLOAD_PROGRESS" desc="Download progress indicator after Live Caption is enabled. The user needs to download certain files for the feature to work.">
     Downloading speech recognition files... <ph name="PERCENT">$1<ex>17</ex></ph>%
   </message>
@@ -984,11 +991,6 @@
   </message>
   <message name="IDS_SETTINGS_NOTIFICATION_WARNING" desc="A warning that notifications will be disabled by deleting cookies for this site.">
     Notifications will be disabled
-  </message>
-
-  <!-- Printing (used by OS Settings page) -->
-  <message name="IDS_SETTINGS_PRINTING" desc="Title of the printing page and navigation item to get there.">
-    Printing
   </message>
 
   <!-- Downloads Page -->
@@ -3292,6 +3294,9 @@
   </message>
   <message name="IDS_SETTINGS_SECURITY_KEYS_PIN_INCORRECT_RETRIES_PL" desc="A message shown to the user when they enter an incorrect PIN for a security key. PINs, in this context, are short, often numeric codes that are often used with, for example, ATM cards. Security keys are external devices used to authenticate people.">
     Incorrect PIN. You have <ph name="RETRIES">$1<ex>8</ex></ph> attempts remaining.
+  </message>
+  <message name="IDS_SETTINGS_SECURITY_KEYS_SAME_PIN_AS_CURRENT" desc="Error message. Displayed when the user attempts to set a new PIN for their security key, and the new PIN is the same as the currently set PIN. PINs, in this context, are short, often numeric codes that are often used with, for example, ATM cards. Security keys are external devices used to authenticate people.">
+    Create a new PIN that's different from your current PIN
   </message>
   <message name="IDS_SETTINGS_SECURITY_KEYS_NEW_PIN" desc="A message shown when a user is trying to set a PIN on a security key. PINs, in this context, are short, often numeric codes that are often used with, for example, ATM cards. Security keys are external devices used to authenticate people.">
     {MIN_PIN_LENGTH, plural,
