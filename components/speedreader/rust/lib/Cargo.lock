@@ -364,7 +364,7 @@ dependencies = [
  "proc-macro2 1.0.24",
  "procedural-masquerade",
  "quote 1.0.7",
- "smallvec",
+ "smallvec 0.6.14",
  "syn 1.0.48",
 ]
 
@@ -1878,7 +1878,7 @@ dependencies = [
  "phf_codegen 0.7.24",
  "precomputed-hash",
  "servo_arc",
- "smallvec",
+ "smallvec 0.6.14",
  "thin-slice",
 ]
 
@@ -2004,6 +2004,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "smallvec"
+version = "1.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fe0f37c9e8f3c5a4a66ad655a93c74daac4ad00c441533bf5c6e7990bb42604e"
+
+[[package]]
 name = "socket2"
 version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2035,7 +2041,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
- "smallvec",
+ "smallvec 1.6.1",
  "termion",
  "thiserror",
  "tokio",
@@ -2340,7 +2346,7 @@ version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "141339a08b982d942be2ca06ff8b076563cbe223d1befd5450716790d44e2426"
 dependencies = [
- "smallvec",
+ "smallvec 0.6.14",
 ]
 
 [[package]]
