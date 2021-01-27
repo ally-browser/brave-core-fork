@@ -155,6 +155,10 @@ struct UpholdWallet {
   map<string, double> fees;
 };
 
+struct BitflyerWallet {
+  WalletStatus status;
+};
+
 struct BalanceReportInfo {
   string id;
   double grants;
