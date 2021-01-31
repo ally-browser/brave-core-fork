@@ -48,8 +48,7 @@ class BraveRequestHandler {
  private:
   void SetupCallbacks();
   void InitPrefChangeRegistrar();
-  void OnReferralHeadersChanged();
-  void OnPreferenceChanged(const std::string& pref_name);
+    void OnPreferenceChanged(const std::string& pref_name);
   void UpdateAdBlockFromPref(const std::string& pref_name);
 
   void RunNextCallback(std::shared_ptr<brave::BraveRequestInfo> ctx);
@@ -64,7 +63,6 @@ class BraveRequestHandler {
   // rewards service. Eliminating this will also help to avoid using
   // PrefChangeRegistrar and corresponding |base::Unretained| usages, that are
   // illegal.
-  std::unique_ptr<base::ListValue> referral_headers_list_;
   std::map<uint64_t, net::CompletionOnceCallback> callbacks_;
   std::unique_ptr<PrefChangeRegistrar, content::BrowserThread::DeleteOnUIThread>
       pref_change_registrar_;

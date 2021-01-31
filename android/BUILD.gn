@@ -1,6 +1,5 @@
 import("//build/config/android/rules.gni")
 import("//brave/components/brave_sync/buildflags/buildflags.gni")
-import("//brave/components/p3a/buildflags.gni")
 
 declare_args() {
   brave_android_developer_options_code = ""
@@ -17,6 +16,5 @@ java_cpp_template("brave_config_java") {
   defines = [
     "BRAVE_ANDROID_DEVELOPER_OPTIONS_CODE=\"$brave_android_developer_options_code\"",
     "BRAVE_ANDROID_SYNC_ENABLED=$enable_brave_sync",
-    "BRAVE_ANDROID_P3A_ENABLED=$brave_p3a_enabled",
   ]
 }

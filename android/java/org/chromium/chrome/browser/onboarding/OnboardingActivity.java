@@ -28,14 +28,6 @@ public class OnboardingActivity extends AppCompatActivity implements OnViewPager
         setContentView(R.layout.activity_onboarding);
 
         OnboardingPrefManager.getInstance().setOnboardingShown(true);
-
-        OnboardingViewPagerAdapter onboardingViewPagerAdapter = new OnboardingViewPagerAdapter(
-            this, getSupportFragmentManager(), this);
-        viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(onboardingViewPagerAdapter);
-        if (BraveActivity.getBraveActivity() != null ) {
-            BraveActivity.getBraveActivity().hideRewardsOnboardingIcon();
-        }
     }
 
     @Override
@@ -46,14 +38,6 @@ public class OnboardingActivity extends AppCompatActivity implements OnViewPager
     @Override
     public void onNext() {
         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-    }
-
-    @Override
-    public void onContinueToWallet() {
-        if (BraveActivity.getBraveActivity() != null ) {
-            BraveActivity.getBraveActivity().openRewardsPanel();
-        }
-        finish();
     }
 
     @Override

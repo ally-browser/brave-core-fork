@@ -46,22 +46,7 @@ declare global {
       initialize: () => void
       statsUpdated: () => void
     }
-    brave_rewards: {
-      initialize: () => void
-      parameters: chrome.events.Event<(properties: Rewards.RewardsParameters) => void>
-      recoverWalletData: chrome.events.Event<(result: number) => void>
-      reconcileStamp: chrome.events.Event<(stamp: number) => void>
-      addresses: chrome.events.Event<(addresses: Record<string, string>) => void>
-      contributeList: chrome.events.Event<(list: Rewards.Publisher[]) => void>
-      balanceReports: chrome.events.Event<(reports: Record<string, Rewards.BalanceReport>) => void>
-    }
     brave_welcome: {
-      initialize: () => void
-    }
-    brave_rewards_tip: {
-      initialize: () => void
-    }
-    brave_rewards_internals: {
       initialize: () => void
     }
     ipfs: {

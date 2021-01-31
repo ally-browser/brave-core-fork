@@ -38,7 +38,6 @@ Polymer({
   /** @override */
   ready: function() {
     this.onWebTorrentEnabledChange_ = this.onWebTorrentEnabledChange_.bind(this)
-    this.onBraveWalletEnabledChange_ = this.onBraveWalletEnabledChange_.bind(this)
     this.onHangoutsEnabledChange_ = this.onHangoutsEnabledChange_.bind(this)
     this.onIPFSCompanionEnabledChange_ = this.onIPFSCompanionEnabledChange_.bind(this)
     this.openExtensionsPage_ = this.openExtensionsPage_.bind(this)
@@ -69,9 +68,6 @@ Polymer({
     this.browserProxy_.isWidevineEnabled().then(enabled => {
       this.widevineEnabled_ = enabled
     })
-    this.browserProxy_.getWeb3ProviderList().then(list => {
-      this.braveWeb3Providers_ = JSON.parse(list)
-    });
     this.browserProxy_.getIPFSResolveMethodList().then(list => {
       this.ipfsResolveMethod_ = JSON.parse(list)
     });
@@ -82,10 +78,6 @@ Polymer({
 
   onWebTorrentEnabledChange_: function() {
     this.browserProxy_.setWebTorrentEnabled(this.$.webTorrentEnabled.checked);
-  },
-
-  onBraveWalletEnabledChange_: function() {
-    this.browserProxy_.setBraveWalletEnabled(this.$.braveWalletEnabled.checked);
   },
 
   onHangoutsEnabledChange_: function() {

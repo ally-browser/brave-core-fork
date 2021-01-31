@@ -15,12 +15,6 @@
 
 namespace brave {
 
-void ShowBraveRewards(Browser* browser) {
-  ShowSingletonTabOverwritingNTP(
-      browser,
-      GetSingletonTabNavigateParams(browser, GURL(kBraveUIRewardsURL)));
-}
-
 void ShowBraveAdblock(Browser* browser) {
   ShowSingletonTabOverwritingNTP(
       browser,
@@ -41,12 +35,6 @@ void ShowWebcompatReporter(Browser* browser) {
     return;
 
   OpenWebcompatReporterDialog(web_contents);
-}
-
-void ShowBraveWallet(Browser* browser) {
-  ShowSingletonTabOverwritingNTP(
-      browser,
-      GetSingletonTabNavigateParams(browser, GURL(kBraveUIWalletURL)));
 }
 
 void ShowExtensionSettings(Browser* browser) {

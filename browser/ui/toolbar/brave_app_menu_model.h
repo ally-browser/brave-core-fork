@@ -21,7 +21,6 @@ class BraveAppMenuModel : public AppMenuModel {
   void Build() override;
 
   void InsertBraveMenuItems();
-  int GetIndexOfBraveRewardsItem() const;
   int GetIndexOfBraveAdBlockItem() const;
   int GetIndexOfBraveSyncItem() const;
 };

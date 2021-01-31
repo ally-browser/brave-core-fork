@@ -9,13 +9,11 @@ source_set("android_browser_process") {
     "brave_relaunch_utils.cc",
     "brave_shields_content_settings.cc",
     "brave_shields_content_settings.h",
-    "brave_stats_updater_android.cc",
   ]
 
   deps = [
     "//base",
     "//brave/browser/android/preferences",
-    "//brave/browser/brave_stats:stats_updater",
     "//brave/build/android:jni_headers",
     "//brave/components/brave_shields/browser",
     "//chrome/android:jni_headers",
@@ -25,17 +23,6 @@ source_set("android_browser_process") {
     "//components/ntp_tiles",
     "//components/translate/core/browser",
   ]
-
-  if (brave_ads_enabled) {
-    sources +=
-        [ "//brave/browser/brave_ads/android/brave_ads_native_helper.cc" ]
-
-    deps += [
-      "//brave/browser/brave_ads/android:jni_headers",
-      "//brave/components/brave_ads/browser",
-      "//brave/components/l10n/browser",
-    ]
-  }
 
   if (enable_brave_sync) {
     sources += [

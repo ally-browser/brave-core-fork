@@ -13,7 +13,6 @@ cr.define('settings', function () {
      * @param {boolean} value name.
      */
     setWebTorrentEnabled (value) {}
-    setBraveWalletEnabled (value) {}
     setHangoutsEnabled (value) {}
     setIPFSCompanionEnabled (value) {}
     setTorEnabled (value) {}
@@ -22,7 +21,6 @@ cr.define('settings', function () {
     setWidevineEnabled() {}
     isWidevineEnabled() {}
     getRestartNeeded () {}
-    getWeb3ProviderList () {}
     wasSignInEnabledAtStartup () {}
     getIPFSResolveMethodList () {}
     getIPFSEnabled () {}
@@ -35,10 +33,6 @@ cr.define('settings', function () {
     /** @override */
     setWebTorrentEnabled (value) {
       chrome.send('setWebTorrentEnabled', [value])
-    }
-
-    setBraveWalletEnabled (value) {
-      chrome.send('setBraveWalletEnabled', [value])
     }
 
     setHangoutsEnabled (value) {
@@ -75,11 +69,6 @@ cr.define('settings', function () {
 
     getRestartNeeded () {
       return cr.sendWithPromise('getRestartNeeded')
-    }
-
-    /** @override */
-    getWeb3ProviderList () {
-      return new Promise(resolve => chrome.braveWallet.getWeb3ProviderList(resolve))
     }
 
     wasSignInEnabledAtStartup () {

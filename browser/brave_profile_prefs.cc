@@ -13,17 +13,11 @@
 #include "brave/browser/themes/brave_dark_mode_utils.h"
 #include "brave/browser/ui/omnibox/brave_omnibox_client_impl.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/binance/browser/buildflags/buildflags.h"
-#include "brave/components/brave_ads/browser/ads_p2a.h"
 #include "brave/components/brave_perf_predictor/browser/buildflags.h"
-#include "brave/components/brave_rewards/common/pref_names.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_sync/brave_sync_prefs.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/brave_wayback_machine/buildflags.h"
 #include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
-#include "brave/components/crypto_dot_com/browser/buildflags/buildflags.h"
-#include "brave/components/gemini/browser/buildflags/buildflags.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "brave/components/l10n/browser/locale_helper.h"
 #include "brave/components/l10n/common/locale_util.h"
@@ -58,21 +52,11 @@
 #include "brave/components/brave_wayback_machine/pref_names.h"
 #endif
 
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/components/brave_wallet/brave_wallet_constants.h"
-#include "brave/components/brave_wallet/pref_names.h"
-#endif
-
 #if BUILDFLAG(IPFS_ENABLED)
 #include "brave/components/ipfs/ipfs_service.h"
 #endif
 
-#if BUILDFLAG(GEMINI_ENABLED)
-#include "brave/components/gemini/browser/pref_names.h"
-#endif
-
 #if BUILDFLAG(ENABLE_BRAVE_PERF_PREDICTOR)
-#include "brave/components/brave_perf_predictor/browser/p3a_bandwidth_savings_tracker.h"
 #include "brave/components/brave_perf_predictor/browser/perf_predictor_tab_helper.h"
 #endif
 
@@ -82,11 +66,6 @@
 
 #if BUILDFLAG(ENABLE_SPEEDREADER)
 #include "brave/components/speedreader/speedreader_service.h"
-#endif
-
-#if BUILDFLAG(CRYPTO_DOT_COM_ENABLED)
-#include "brave/components/crypto_dot_com/browser/crypto_dot_com_pref_utils.h"
-#include "brave/components/crypto_dot_com/common/pref_names.h"
 #endif
 
 #if BUILDFLAG(ENABLE_TOR)
@@ -124,12 +103,10 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
 
 #if BUILDFLAG(ENABLE_BRAVE_PERF_PREDICTOR)
   brave_perf_predictor::PerfPredictorTabHelper::RegisterProfilePrefs(registry);
-  brave_perf_predictor::P3ABandwidthSavingsTracker::RegisterPrefs(registry);
 #endif
 
   // appearance
   registry->RegisterBooleanPref(kLocationBarIsWide, false);
-  registry->RegisterBooleanPref(brave_rewards::prefs::kHideButton, false);
   registry->RegisterBooleanPref(kMRUCyclingEnabled, false);
 
   brave_sync::Prefs::RegisterProfilePrefs(registry);
@@ -250,52 +227,9 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
   registry->RegisterStringPref(kNewTabPageClockFormat, "");
   registry->RegisterBooleanPref(kNewTabPageShowStats, true);
 
-  // Only default brave today to enabled for
-  // english-language on browser startup.
-  const std::string locale =
-      brave_l10n::LocaleHelper::GetInstance()->GetLocale();
-  const std::string language_code = brave_l10n::GetLanguageCode(locale);
-  const bool is_english_language = language_code == "en";
-  registry->RegisterBooleanPref(kNewTabPageShowToday, is_english_language);
-
-  registry->RegisterBooleanPref(kNewTabPageShowRewards, true);
-  registry->RegisterBooleanPref(kNewTabPageShowBinance, true);
-  registry->RegisterBooleanPref(kNewTabPageShowTogether, false);
-  registry->RegisterBooleanPref(kNewTabPageShowGemini, true);
   registry->RegisterIntegerPref(
       kNewTabPageShowsOptions,
       static_cast<int>(NewTabPageShowsOptions::kDashboard));
-
-  // Brave Today
-  registry->RegisterDictionaryPref(kBraveTodaySources);
-  registry->RegisterBooleanPref(kBraveTodayIntroDismissed, false);
-  registry->RegisterListPref(kBraveTodayWeeklySessionCount);
-  registry->RegisterListPref(kBraveTodayWeeklyCardViewsCount);
-  registry->RegisterListPref(kBraveTodayWeeklyCardVisitsCount);
-
-  // Brave Wallet
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  registry->RegisterIntegerPref(kBraveWalletPrefVersion, 0);
-  registry->RegisterStringPref(kBraveWalletAES256GCMSivNonce, "");
-  registry->RegisterStringPref(kBraveWalletEncryptedSeed, "");
-  registry->RegisterIntegerPref(
-      kBraveWalletWeb3Provider,
-      static_cast<int>(BraveWalletWeb3ProviderTypes::ASK));
-  registry->RegisterBooleanPref(kLoadCryptoWalletsOnStartup, false);
-  registry->RegisterBooleanPref(kOptedIntoCryptoWallets, false);
-#endif
-
-  // Binance widget
-#if BUILDFLAG(BINANCE_ENABLED)
-  registry->RegisterStringPref(kBinanceAccessToken, "");
-  registry->RegisterStringPref(kBinanceRefreshToken, "");
-#endif
-
-  // Gemini widget
-#if BUILDFLAG(GEMINI_ENABLED)
-  registry->RegisterStringPref(kGeminiAccessToken, "");
-  registry->RegisterStringPref(kGeminiRefreshToken, "");
-#endif
 
   // Autocomplete in address bar
   registry->RegisterBooleanPref(kAutocompleteEnabled, true);
@@ -318,10 +252,6 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
   speedreader::SpeedreaderService::RegisterPrefs(registry);
 #endif
 
-#if BUILDFLAG(CRYPTO_DOT_COM_ENABLED)
-  crypto_dot_com::RegisterPrefs(registry);
-#endif
-
 #if BUILDFLAG(ENABLE_TOR)
   tor::TorProfileService::RegisterPrefs(registry);
 #endif
@@ -331,7 +261,6 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
 #endif
 
 #if !defined(OS_ANDROID)
-  brave_ads::RegisterP2APrefs(registry);
 #endif
 
 #if !defined(OS_ANDROID)

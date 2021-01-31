@@ -22,7 +22,6 @@ import org.chromium.chrome.browser.BraveFeatureList;
 import org.chromium.chrome.browser.ChromeTabbedActivity;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.preferences.BravePrefServiceBridge;
-import org.chromium.chrome.browser.settings.developer.BraveRewardsDebugPreferences;
 
 public class BravePreferenceFragment extends PreferenceFragmentCompat {
     protected static final int STORAGE_PERMISSION_EXPORT_REQUEST_CODE = 8000;
@@ -57,15 +56,6 @@ public class BravePreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public void onResume() {
         super.onResume();
-        if (!ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS)
-                || BravePrefServiceBridge.getInstance().getSafetynetCheckFailed()) {
-            if (getPreferenceScreen() == null) return;
-            Preference braveRewardsDebugPreference =
-                    getPreferenceScreen().findPreference(BraveRewardsDebugPreferences.KEY);
-            if (braveRewardsDebugPreference != null) {
-                getPreferenceScreen().removePreference(braveRewardsDebugPreference);
-            }
-        }
     }
 
     protected boolean isStoragePermissionGranted(boolean isExport) {

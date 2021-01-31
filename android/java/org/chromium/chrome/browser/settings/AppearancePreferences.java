@@ -16,8 +16,6 @@ import org.chromium.base.ContextUtils;
 import org.chromium.chrome.R;
 import org.chromium.chrome.browser.BraveFeatureList;
 import org.chromium.chrome.browser.BraveRelaunchUtils;
-import org.chromium.chrome.browser.BraveRewardsNativeWorker;
-import org.chromium.chrome.browser.BraveRewardsObserver;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.night_mode.NightModeUtils;
 import org.chromium.chrome.browser.preferences.BravePreferenceKeys;
@@ -28,10 +26,8 @@ import org.chromium.components.browser_ui.settings.SettingsUtils;
 import org.chromium.ui.base.DeviceFormFactor;
 
 public class AppearancePreferences extends BravePreferenceFragment
-        implements Preference.OnPreferenceChangeListener, BraveRewardsObserver {
-    public static final String PREF_HIDE_BRAVE_REWARDS_ICON = "hide_brave_rewards_icon";
+        implements Preference.OnPreferenceChangeListener {
     public static final String PREF_BRAVE_NIGHT_MODE_ENABLED = "brave_night_mode_enabled_key";
-    private BraveRewardsNativeWorker mBraveRewardsNativeWorker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,10 +43,6 @@ public class AppearancePreferences extends BravePreferenceFragment
         if (!NightModeUtils.isNightModeSupported()) {
             removePreferenceIfPresent(PREF_UI_THEME);
         }
-
-        if (!ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS)) {
-            removePreferenceIfPresent(PREF_HIDE_BRAVE_REWARDS_ICON);
-        }
     }
 
     @Override
@@ -64,13 +56,6 @@ public class AppearancePreferences extends BravePreferenceFragment
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        ChromeSwitchPreference hideBraveRewardsIconPref = (ChromeSwitchPreference) findPreference(PREF_HIDE_BRAVE_REWARDS_ICON);
-        if (hideBraveRewardsIconPref != null) {
-            SharedPreferences sharedPreferences = ContextUtils.getAppSharedPreferences();
-            hideBraveRewardsIconPref.setChecked(sharedPreferences.getBoolean(PREF_HIDE_BRAVE_REWARDS_ICON, false));
-            hideBraveRewardsIconPref.setOnPreferenceChangeListener(this);
-        }
 
         Preference nightModeEnabled =
                 findPreference(PREF_BRAVE_NIGHT_MODE_ENABLED);
@@ -97,18 +82,11 @@ public class AppearancePreferences extends BravePreferenceFragment
 
     @Override
     public void onStart() {
-        mBraveRewardsNativeWorker = BraveRewardsNativeWorker.getInstance();
-        if (mBraveRewardsNativeWorker != null) {
-            mBraveRewardsNativeWorker.AddObserver(this);
-        }
         super.onStart();
     }
 
     @Override
     public void onStop() {
-        if (mBraveRewardsNativeWorker != null) {
-            mBraveRewardsNativeWorker.RemoveObserver(this);
-        }
         super.onStop();
     }
 
@@ -122,12 +100,6 @@ public class AppearancePreferences extends BravePreferenceFragment
                     .putBoolean(BravePreferenceKeys.BRAVE_BOTTOM_TOOLBAR_ENABLED_KEY,
                             !originalStatus)
                     .apply();
-            BraveRelaunchUtils.askForRelaunch(getActivity());
-        } else if (PREF_HIDE_BRAVE_REWARDS_ICON.equals(key)) {
-            SharedPreferences sharedPreferences = ContextUtils.getAppSharedPreferences();
-            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-            sharedPreferencesEditor.putBoolean(PREF_HIDE_BRAVE_REWARDS_ICON, !(boolean) newValue);
-            sharedPreferencesEditor.apply();
             BraveRelaunchUtils.askForRelaunch(getActivity());
         } else if (PREF_BRAVE_NIGHT_MODE_ENABLED.equals(key)) {
             BraveFeatureList.enableFeature(

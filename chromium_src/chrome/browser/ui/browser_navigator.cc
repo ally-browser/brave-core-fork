@@ -55,9 +55,7 @@ void MaybeHandleInParent(NavigateParams* params, bool allow_in_incognito) {
 }
 
 bool IsHostAllowedInIncognitoBraveImpl(const base::StringPiece& host) {
-  if (host == kWalletHost ||
-      host == kRewardsPageHost ||
-      host == chrome::kChromeUISyncInternalsHost) {
+  if (host == chrome::kChromeUISyncInternalsHost) {
     return false;
   }
 

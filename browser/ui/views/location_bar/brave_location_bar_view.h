@@ -13,7 +13,6 @@
 
 class BraveActionsContainer;
 class BraveActionsContainerTest;
-class RewardsBrowserTest;
 class SkPath;
 
 #if BUILDFLAG(ENABLE_TOR)
@@ -48,7 +47,6 @@ class BraveLocationBarView : public LocationBarView {
 
  private:
   friend class ::BraveActionsContainerTest;
-  friend class ::RewardsBrowserTest;
   BraveActionsContainer* brave_actions_ = nullptr;
 #if BUILDFLAG(ENABLE_TOR)
   OnionLocationView* onion_location_view_ = nullptr;

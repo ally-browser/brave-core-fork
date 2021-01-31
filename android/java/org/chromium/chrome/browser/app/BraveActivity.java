@@ -43,8 +43,6 @@ import org.chromium.chrome.R;
 import org.chromium.chrome.browser.ApplicationLifetime;
 import org.chromium.chrome.browser.BraveConfig;
 import org.chromium.chrome.browser.BraveHelper;
-import org.chromium.chrome.browser.BraveRewardsHelper;
-import org.chromium.chrome.browser.BraveRewardsNativeWorker;
 import org.chromium.chrome.browser.BraveSyncReflectionUtils;
 import org.chromium.chrome.browser.ChromeTabbedActivity;
 import org.chromium.chrome.browser.CrossPromotionalModalDialogFragment;
@@ -60,16 +58,12 @@ import org.chromium.chrome.browser.notifications.retention.RetentionNotification
 import org.chromium.chrome.browser.ntp.NewTabPage;
 import org.chromium.chrome.browser.onboarding.OnboardingActivity;
 import org.chromium.chrome.browser.onboarding.OnboardingPrefManager;
-import org.chromium.chrome.browser.onboarding.P3aOnboardingActivity;
 import org.chromium.chrome.browser.onboarding.v2.HighlightDialogFragment;
 import org.chromium.chrome.browser.preferences.BravePrefServiceBridge;
 import org.chromium.chrome.browser.preferences.BravePreferenceKeys;
 import org.chromium.chrome.browser.preferences.Pref;
 import org.chromium.chrome.browser.preferences.SharedPreferencesManager;
 import org.chromium.chrome.browser.profiles.Profile;
-import org.chromium.chrome.browser.rate.RateDialogFragment;
-import org.chromium.chrome.browser.rate.RateUtils;
-import org.chromium.chrome.browser.settings.BraveRewardsPreferences;
 import org.chromium.chrome.browser.settings.BraveSearchEngineUtils;
 import org.chromium.chrome.browser.share.ShareDelegate;
 import org.chromium.chrome.browser.share.ShareDelegateImpl.ShareOrigin;
@@ -80,11 +74,7 @@ import org.chromium.chrome.browser.tab.TabSelectionType;
 import org.chromium.chrome.browser.tabmodel.TabModel;
 import org.chromium.chrome.browser.tabmodel.TabModelUtils;
 import org.chromium.chrome.browser.toolbar.top.BraveToolbarLayout;
-import org.chromium.chrome.browser.util.BraveDbUtil;
-import org.chromium.chrome.browser.util.BraveReferrer;
 import org.chromium.chrome.browser.util.PackageUtils;
-import org.chromium.chrome.browser.widget.crypto.binance.BinanceAccountBalance;
-import org.chromium.chrome.browser.widget.crypto.binance.BinanceWidgetManager;
 import org.chromium.components.bookmarks.BookmarkId;
 import org.chromium.components.bookmarks.BookmarkType;
 import org.chromium.components.embedder_support.util.UrlConstants;
@@ -105,17 +95,6 @@ import java.util.Locale;
 @JNINamespace("chrome::android")
 public abstract class BraveActivity<C extends ChromeActivityComponent> extends ChromeActivity {
     public static final int SITE_BANNER_REQUEST_CODE = 33;
-    public static final int VERIFY_WALLET_ACTIVITY_REQUEST_CODE = 34;
-    public static final int USER_WALLET_ACTIVITY_REQUEST_CODE = 35;
-    public static final String ADD_FUNDS_URL = "chrome://rewards/#add-funds";
-    public static final String REWARDS_SETTINGS_URL = "chrome://rewards/";
-    public static final String BRAVE_REWARDS_SETTINGS_URL = "brave://rewards/";
-    public static final String REWARDS_AC_SETTINGS_URL = "chrome://rewards/contribute";
-    public static final String REWARDS_LEARN_MORE_URL = "https://brave.com/faq-rewards/#unclaimed-funds";
-    public static final String BRAVE_TERMS_PAGE =
-            "https://basicattentiontoken.org/user-terms-of-service/";
-    public static final String P3A_URL = "https://brave.com/p3a";
-    public static final String BRAVE_PRIVACY_POLICY = "https://brave.com/privacy/#rewards";
     private static final String PREF_CLOSE_TABS_ON_EXIT = "close_tabs_on_exit";
     public static final String OPEN_URL = "open_url";
 
@@ -128,7 +107,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
     public static final String CHANNEL_ID = "com.brave.browser";
     public static final String ANDROID_SETUPWIZARD_PACKAGE_NAME = "com.google.android.setupwizard";
     public static final String ANDROID_PACKAGE_NAME = "android";
-    public static final String BRAVE_BLOG_URL = "http://www.brave.com/blog";
 
     // Explicitly declare this variable to avoid build errors.
     // It will be removed in asm and parent variable will be used instead.
@@ -169,8 +147,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
             ApplicationLifetime.terminate(false);
         } else if (id == R.id.set_default_browser) {
             handleBraveSetDefaultBrowserDialog();
-        } else if (id == R.id.brave_rewards_id) {
-            openNewOrSelectExistingTab(REWARDS_SETTINGS_URL);
         } else {
             return false;
         }
@@ -220,7 +196,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
     public void performPostInflationStartup() {
         super.performPostInflationStartup();
 
-        BraveReferrer.getInstance().initReferrer(this);
         createNotificationChannel();
         setupBraveSetDefaultBrowserNotification();
     }
@@ -238,20 +213,12 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
     public void finishNativeInitialization() {
         super.finishNativeInitialization();
 
-        if (BraveRewardsHelper.hasRewardsEnvChange()) {
-            BravePrefServiceBridge.getInstance().resetPromotionLastFetchStamp();
-            BraveRewardsHelper.setRewardsEnvChange(false);
-        }
-
         int appOpenCount = SharedPreferencesManager.getInstance().readInt(BravePreferenceKeys.BRAVE_APP_OPEN_COUNT);
         SharedPreferencesManager.getInstance().writeInt(BravePreferenceKeys.BRAVE_APP_OPEN_COUNT, appOpenCount + 1);
 
         if (PackageUtils.isFirstInstall(this) && appOpenCount == 0) {
             checkForYandexSE();
         }
-
-        //set bg ads to off for existing and new installations
-        setBgBraveAdsDefaultOff();
 
         Context app = ContextUtils.getApplicationContext();
         if (null != app
@@ -261,14 +228,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
         }
 
         checkForNotificationData();
-
-        if (!RateUtils.getInstance(this).getPrefRateEnabled()) {
-            RateUtils.getInstance(this).setPrefRateEnabled(true);
-            RateUtils.getInstance(this).setNextRateDateAndCount();
-        }
-
-        if (RateUtils.getInstance(this).shouldShowRateDialog())
-            showBraveRateDialog();
 
         // TODO commenting out below code as we may use it in next release
 
@@ -311,13 +270,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
         BraveSyncReflectionUtils.showInformers();
         BraveAndroidSyncDisabledInformer.showInformers();
 
-        if (BraveConfig.P3A_ENABLED
-                && !OnboardingPrefManager.getInstance().isP3aOnboardingShown()) {
-            Intent p3aOnboardingIntent = new Intent(this, P3aOnboardingActivity.class);
-            p3aOnboardingIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(p3aOnboardingIntent);
-        }
-
         if (!OnboardingPrefManager.getInstance().isOneTimeNotificationStarted()
                 && PackageUtils.isFirstInstall(this)) {
             RetentionNotificationUtil.scheduleNotification(this, RetentionNotificationUtil.HOUR_3);
@@ -330,29 +282,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
             RetentionNotificationUtil.scheduleNotification(this, RetentionNotificationUtil.DEFAULT_BROWSER_2);
             RetentionNotificationUtil.scheduleNotification(this, RetentionNotificationUtil.DEFAULT_BROWSER_3);
             OnboardingPrefManager.getInstance().setOneTimeNotificationStarted(true);
-        }
-        if (!TextUtils.isEmpty(BinanceWidgetManager.getInstance().getBinanceAccountBalance())) {
-            try {
-                BinanceWidgetManager.binanceAccountBalance = new BinanceAccountBalance(
-                        BinanceWidgetManager.getInstance().getBinanceAccountBalance());
-            } catch (JSONException e) {
-                Log.e("NTP", e.getMessage());
-            }
-        }
-
-        if (PackageUtils.isFirstInstall(this)
-                && SharedPreferencesManager.getInstance().readInt(
-                           BravePreferenceKeys.BRAVE_APP_OPEN_COUNT)
-                        == 1) {
-            Calendar calender = Calendar.getInstance();
-            calender.setTime(new Date());
-            calender.add(Calendar.DATE, DAYS_4);
-            BraveRewardsHelper.setNextRewardsOnboardingModalDate(calender.getTimeInMillis());
-        }
-        if (BraveRewardsHelper.shouldShowRewardsOnboardingModalOnDay4()) {
-            BraveRewardsHelper.setShowBraveRewardsOnboardingModal(true);
-            openRewardsPanel();
-            BraveRewardsHelper.setRewardsOnboardingModalShown(true);
         }
     }
 
@@ -392,7 +321,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
             case RetentionNotificationUtil.DAY_10:
             case RetentionNotificationUtil.DAY_30:
             case RetentionNotificationUtil.DAY_35:
-                openRewardsPanel();
                 break;
             }
         }
@@ -431,14 +359,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
             transaction.commitAllowingStateLoss();
         } catch (IllegalStateException e) {
             Log.e("HighlightDialogFragment", e.getMessage());
-        }
-    }
-
-    public void hideRewardsOnboardingIcon() {
-        BraveToolbarLayout layout = (BraveToolbarLayout)findViewById(R.id.toolbar);
-        assert layout != null;
-        if (layout != null) {
-            layout.hideRewardsOnboardingIcon();
         }
     }
 
@@ -494,55 +414,14 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
             return;
         }
         if (supportsDefault) {
-            if (resolveInfo.activityInfo.packageName.equals(ANDROID_SETUPWIZARD_PACKAGE_NAME)
-                    || resolveInfo.activityInfo.packageName.equals(ANDROID_PACKAGE_NAME)) {
-                LayoutInflater inflater = getLayoutInflater();
-                View layout = inflater.inflate(R.layout.brave_set_default_browser_dialog,
-                                               (ViewGroup) findViewById(R.id.brave_set_default_browser_toast_container));
-
-                Toast toast = new Toast(context, layout);
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP, 0, 40);
-                toast.show();
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BRAVE_BLOG_URL));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            } else {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            }
+	    Intent intent = new Intent(Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+	    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+	    context.startActivity(intent);
         } else {
-            if (resolveInfo.activityInfo.packageName.equals(ANDROID_SETUPWIZARD_PACKAGE_NAME)
-                    || resolveInfo.activityInfo.packageName.equals(ANDROID_PACKAGE_NAME)) {
-                // (Albert Wang): From what I've experimented on 6.0,
-                // default browser popup is in the middle of the screen for
-                // these versions. So we shouldn't show the toast.
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(BRAVE_BLOG_URL));
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            } else {
-                Toast toast = Toast.makeText(
+	    Toast toast = Toast.makeText(
                                   context, R.string.brave_default_browser_go_to_settings, Toast.LENGTH_LONG);
-                toast.show();
-                return;
-            }
-        }
-    }
-
-    public void OnRewardsPanelDismiss() {
-        BraveToolbarLayout layout = (BraveToolbarLayout)findViewById(R.id.toolbar);
-        assert layout != null;
-        if (layout != null) {
-            layout.onRewardsPanelDismiss();
-        }
-    }
-
-    public void dismissRewardsPanel() {
-        BraveToolbarLayout layout = (BraveToolbarLayout)findViewById(R.id.toolbar);
-        assert layout != null;
-        if (layout != null) {
-            layout.dismissRewardsPanel();
+	    toast.show();
+	    return;
         }
     }
 
@@ -551,14 +430,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
         assert layout != null;
         if (layout != null) {
             layout.dismissShieldsTooltip();
-        }
-    }
-
-    public void openRewardsPanel() {
-        BraveToolbarLayout layout = (BraveToolbarLayout)findViewById(R.id.toolbar);
-        assert layout != null;
-        if (layout != null) {
-            layout.openRewardsPanel();
         }
     }
 
@@ -597,12 +468,6 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
         }
     }
 
-    private void showBraveRateDialog() {
-        RateDialogFragment mRateDialogFragment = new RateDialogFragment();
-        mRateDialogFragment.setCancelable(false);
-        mRateDialogFragment.show(getSupportFragmentManager(), "RateDialogFragment");
-    }
-
     private void showCrossPromotionalDialog() {
         CrossPromotionalModalDialogFragment mCrossPromotionalModalDialogFragment = new CrossPromotionalModalDialogFragment();
         mCrossPromotionalModalDialogFragment.setCancelable(false);
@@ -635,10 +500,7 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
     public void onActivityResult (int requestCode, int resultCode,
                                   Intent data) {
         if (resultCode == RESULT_OK &&
-                (requestCode == VERIFY_WALLET_ACTIVITY_REQUEST_CODE ||
-                 requestCode == USER_WALLET_ACTIVITY_REQUEST_CODE ||
-                 requestCode == SITE_BANNER_REQUEST_CODE) ) {
-            dismissRewardsPanel();
+                (requestCode == SITE_BANNER_REQUEST_CODE) ) {
             String open_url = data.getStringExtra(BraveActivity.OPEN_URL);
             if (! TextUtils.isEmpty(open_url)) {
                 openNewOrSelectExistingTab(open_url);
@@ -647,44 +509,8 @@ public abstract class BraveActivity<C extends ChromeActivityComponent> extends C
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * Disable background ads on Android. Issue #8641.
-     */
-    private void setBgBraveAdsDefaultOff() {
-        SharedPreferences sharedPreferences =
-            ContextUtils.getAppSharedPreferences();
-        boolean exists = sharedPreferences.contains(
-                             BraveRewardsPreferences.PREF_ADS_SWITCH_DEFAULT_HAS_BEEN_SET);
-        if (!exists) {
-            SharedPreferences.Editor sharedPreferencesEditor =
-                sharedPreferences.edit();
-            sharedPreferencesEditor.putBoolean(
-                BraveRewardsPreferences.PREF_ADS_SWITCH, false);
-            sharedPreferencesEditor.putBoolean(
-                BraveRewardsPreferences.PREF_ADS_SWITCH_DEFAULT_HAS_BEEN_SET, true);
-            sharedPreferencesEditor.apply();
-        }
-    }
-
     @Override
     public void performPreInflationStartup() {
-        BraveDbUtil dbUtil = BraveDbUtil.getInstance();
-        if (dbUtil.dbOperationRequested()) {
-            AlertDialog dialog = new AlertDialog.Builder(this)
-            .setMessage(dbUtil.performDbExportOnStart() ? "Exporting database, please wait..."
-                        : "Importing database, please wait...")
-            .setCancelable(false)
-            .create();
-            dialog.setCanceledOnTouchOutside(false);
-            if (dbUtil.performDbExportOnStart()) {
-                dbUtil.setPerformDbExportOnStart(false);
-                dbUtil.ExportRewardsDb(dialog);
-            } else if (dbUtil.performDbImportOnStart() && !dbUtil.dbImportFile().isEmpty()) {
-                dbUtil.setPerformDbImportOnStart(false);
-                dbUtil.ImportRewardsDb(dialog, dbUtil.dbImportFile());
-            }
-            dbUtil.cleanUpDbOperationRequest();
-        }
         super.performPreInflationStartup();
     }
 

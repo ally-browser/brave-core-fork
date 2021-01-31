@@ -9,10 +9,8 @@ import org.chromium.components.external_intents.ExternalNavigationDelegate;
 import org.chromium.components.external_intents.ExternalNavigationHandler;
 import org.chromium.components.external_intents.ExternalNavigationParams;
 import org.chromium.components.external_intents.ExternalNavigationHandler.OverrideUrlLoadingResult;
-import org.chromium.chrome.browser.BraveUphold;
 
 public class BraveExternalNavigationHandler extends ExternalNavigationHandler {
-    private BraveUphold mBraveUphold;
 
     public BraveExternalNavigationHandler(ExternalNavigationDelegate delegate) {
         super(delegate);
@@ -20,21 +18,7 @@ public class BraveExternalNavigationHandler extends ExternalNavigationHandler {
 
     @Override
     public @OverrideUrlLoadingResult int shouldOverrideUrlLoading(ExternalNavigationParams params) {
-        if (isUpholdOverride(params)) {
-            CompleteUpholdVerification(params);
-            return OverrideUrlLoadingResult.OVERRIDE_WITH_CLOBBERING_TAB;
-        }
         return super.shouldOverrideUrlLoading(params);
-    }
-
-    private boolean isUpholdOverride(ExternalNavigationParams params) {
-        if (!params.getUrl().startsWith(BraveUphold.UPHOLD_REDIRECT_URL)) return false;
-        return true;
-    }
-
-    private void CompleteUpholdVerification(ExternalNavigationParams params) {
-        mBraveUphold = new BraveUphold();
-        mBraveUphold.CompleteUpholdVerification(params, this);
     }
 
     public @OverrideUrlLoadingResult int clobberCurrentTabWithFallbackUrl(

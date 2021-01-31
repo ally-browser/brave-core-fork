@@ -7,9 +7,7 @@
 
 #include "brave/browser/ui/brave_browser_command_controller.h"
 #include "brave/browser/ui/browser_commands.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_sync/buildflags/buildflags.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/tor/buildflags/buildflags.h"
 #include "chrome/app/chrome_command_ids.h"
 #include "chrome/browser/chrome_notification_types.h"
@@ -36,11 +34,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
                        BraveCommandsEnableTest) {
   // Test normal browser's brave commands status.
   auto* command_controller = browser()->command_controller();
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_REWARDS));
-#else
-  EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_REWARDS));
-#endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_ADBLOCK));
 
@@ -63,12 +56,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
     EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
 #else
   EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_WALLET));
-#else
-  EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_WALLET));
 #endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_ADD_NEW_PROFILE));
@@ -79,9 +66,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
   // Create private browser and test its brave commands status.
   auto* private_browser = CreateIncognitoBrowser();
   command_controller = private_browser->command_controller();
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_REWARDS));
-#endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_ADBLOCK));
 
@@ -99,10 +83,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
     EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
 #else
   EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_WALLET));
 #endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_ADD_NEW_PROFILE));
@@ -128,9 +108,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
   }
   DCHECK(guest_browser);
   command_controller = guest_browser->command_controller();
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_REWARDS));
-#endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_ADBLOCK));
 
@@ -143,10 +120,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
 
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
   EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_WALLET));
 #endif
 
   EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_ADD_NEW_PROFILE));
@@ -170,9 +143,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
   }
   DCHECK(tor_browser);
   command_controller = tor_browser->command_controller();
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_REWARDS));
-#endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_ADBLOCK));
 
@@ -186,10 +156,6 @@ IN_PROC_BROWSER_TEST_F(BraveBrowserCommandControllerTest,
     EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
   else
     EXPECT_FALSE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_SYNC));
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_SHOW_BRAVE_WALLET));
 #endif
 
   EXPECT_TRUE(command_controller->IsCommandEnabled(IDC_ADD_NEW_PROFILE));

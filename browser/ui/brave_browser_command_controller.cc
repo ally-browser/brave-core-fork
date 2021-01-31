@@ -12,9 +12,7 @@
 #include "brave/browser/ui/brave_pages.h"
 #include "brave/browser/ui/browser_commands.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_sync/buildflags/buildflags.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "chrome/app/chrome_command_ids.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/ui/browser.h"
@@ -106,12 +104,6 @@ void BraveBrowserCommandController::InitBraveCommandState() {
   // to normal window in this case.
   const bool is_guest_session = browser_->profile()->IsGuestSession();
   if (!is_guest_session) {
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-    UpdateCommandForBraveRewards();
-#endif
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-    UpdateCommandForBraveWallet();
-#endif
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
     if (switches::IsSyncAllowedByFlag())
       UpdateCommandForBraveSync();
@@ -125,10 +117,6 @@ void BraveBrowserCommandController::InitBraveCommandState() {
   UpdateCommandEnabled(IDC_ADD_NEW_PROFILE, !is_guest_session);
   UpdateCommandEnabled(IDC_OPEN_GUEST_PROFILE, !is_guest_session);
   UpdateCommandEnabled(IDC_TOGGLE_SPEEDREADER, true);
-}
-
-void BraveBrowserCommandController::UpdateCommandForBraveRewards() {
-  UpdateCommandEnabled(IDC_SHOW_BRAVE_REWARDS, true);
 }
 
 void BraveBrowserCommandController::UpdateCommandForBraveAdblock() {
@@ -151,10 +139,6 @@ void BraveBrowserCommandController::UpdateCommandForTor() {
 
 void BraveBrowserCommandController::UpdateCommandForBraveSync() {
   UpdateCommandEnabled(IDC_SHOW_BRAVE_SYNC, true);
-}
-
-void BraveBrowserCommandController::UpdateCommandForBraveWallet() {
-  UpdateCommandEnabled(IDC_SHOW_BRAVE_WALLET, true);
 }
 
 bool BraveBrowserCommandController::ExecuteBraveCommandWithDisposition(
@@ -184,9 +168,6 @@ bool BraveBrowserCommandController::ExecuteBraveCommandWithDisposition(
             id, disposition, time_stamp);
       NewIncognitoWindow(browser_->profile()->GetOriginalProfile());
       break;
-    case IDC_SHOW_BRAVE_REWARDS:
-      brave::ShowBraveRewards(browser_);
-      break;
     case IDC_SHOW_BRAVE_ADBLOCK:
       brave::ShowBraveAdblock(browser_);
       break;
@@ -201,9 +182,6 @@ bool BraveBrowserCommandController::ExecuteBraveCommandWithDisposition(
       break;
     case IDC_SHOW_BRAVE_SYNC:
       brave::ShowSync(browser_);
-      break;
-    case IDC_SHOW_BRAVE_WALLET:
-      brave::ShowBraveWallet(browser_);
       break;
     case IDC_ADD_NEW_PROFILE:
       brave::AddNewProfile();

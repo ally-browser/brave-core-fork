@@ -7,13 +7,10 @@
 
 #include "base/command_line.h"
 #include "base/feature_list.h"
-#include "brave/browser/brave_stats/brave_stats_tab_helper.h"
 #include "brave/browser/ephemeral_storage/ephemeral_storage_tab_helper.h"
 #include "brave/browser/farbling/farbling_tab_helper.h"
 #include "brave/browser/ui/bookmark/brave_bookmark_tab_helper.h"
-#include "brave/components/brave_ads/browser/ads_tab_helper.h"
 #include "brave/components/brave_perf_predictor/browser/buildflags.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_shields/browser/buildflags/buildflags.h"  // For STP
 #include "brave/components/brave_wayback_machine/buildflags.h"
@@ -33,10 +30,6 @@
 #if defined(OS_ANDROID)
 #include "brave/browser/android/preferences/background_video_playback_tab_helper.h"
 #include "brave/browser/android/preferences/website/desktop_mode_tab_helper.h"
-#endif
-
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-#include "brave/browser/brave_rewards/rewards_tab_helper.h"
 #endif
 
 #if BUILDFLAG(BRAVE_STP_ENABLED)
@@ -88,10 +81,6 @@ void AttachTabHelpers(content::WebContents* web_contents) {
   BraveBookmarkTabHelper::CreateForWebContents(web_contents);
 #endif
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  brave_rewards::RewardsTabHelper::CreateForWebContents(web_contents);
-#endif
-
 #if BUILDFLAG(BRAVE_STP_ENABLED)
   if (brave_shields::TrackingProtectionService::
           IsSmartTrackingProtectionEnabled()) {
@@ -112,8 +101,6 @@ void AttachTabHelpers(content::WebContents* web_contents) {
       web_contents);
 #endif
 
-  brave_ads::AdsTabHelper::CreateForWebContents(web_contents);
-
 #if BUILDFLAG(ENABLE_SPEEDREADER)
   speedreader::SpeedreaderTabHelper::CreateForWebContents(web_contents);
 #endif
@@ -129,8 +116,6 @@ void AttachTabHelpers(content::WebContents* web_contents) {
 #endif
 
   FarblingTabHelper::CreateForWebContents(web_contents);
-
-  brave_stats::BraveStatsTabHelper::CreateForWebContents(web_contents);
 
   if (base::FeatureList::IsEnabled(net::features::kBraveEphemeralStorage)) {
     ephemeral_storage::EphemeralStorageTabHelper::CreateForWebContents(

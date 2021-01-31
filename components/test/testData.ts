@@ -4,7 +4,6 @@
 
 // Initial state
 import { defaultState as welcomeData } from '../../components/brave_welcome_ui/storage'
-import { defaultState as rewardsData } from '../../components/brave_rewards/resources/page/storage'
 import { defaultState as adblockData } from '../../components/brave_adblock_ui/storage'
 
 // Types
@@ -31,8 +30,6 @@ export class ChromeEvent {
 }
 
 export const welcomeInitialState: Welcome.ApplicationState = { welcomeData }
-
-export const rewardsInitialState: Rewards.ApplicationState = { rewardsData }
 
 export const adblockInitialState: AdBlock.ApplicationState = { adblockData }
 
@@ -139,9 +136,6 @@ export const getMockChrome = () => {
   let mock = {
     send: (methodName: string, ...args: Array<any>) => undefined,
     getVariableValue: () => undefined,
-    braveRewards: {
-      getPublisherData: (id: number, url: string, favicon: string) => undefined
-    },
     braveTheme: {
       setBraveThemeType: function (theme: string) {
         return

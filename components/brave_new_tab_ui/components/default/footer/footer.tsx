@@ -24,29 +24,23 @@ import {
   BookmarkBook,
   HistoryIcon
 } from 'brave-ui/components/icons'
-import TogetherTooltip from './togetherTooltip'
-import TogetherIcon from './togetherTooltip/togetherIcon'
 
 // Helpers
 import { getLocale } from '../../../../common/locale'
 
 interface Props {
   textDirection: string
-  togetherPrmoptDismissed: boolean
   backgroundImageInfo: any
   showPhotoInfo: boolean
   onClickSettings: () => any
-  onDismissTogetherPrompt: () => any
 }
 
 export default class FooterInfo extends React.PureComponent<Props, {}> {
   render () {
     const {
       textDirection,
-      togetherPrmoptDismissed,
       backgroundImageInfo,
       showPhotoInfo,
-      onDismissTogetherPrompt,
       onClickSettings
     } = this.props
 
@@ -84,16 +78,6 @@ export default class FooterInfo extends React.PureComponent<Props, {}> {
             <IconLink title={getLocale('historyPageTitle')} href='chrome://history'>
               <HistoryIcon />
             </IconLink>
-            { !togetherPrmoptDismissed
-              ? <TogetherTooltip onClose={onDismissTogetherPrompt}>
-                  <IconLink title={getLocale('togetherPageTitle')} href='https://together.brave.com/widget'>
-                    <TogetherIcon />
-                  </IconLink>
-                </TogetherTooltip>
-              : <IconLink title={getLocale('togetherPageTitle')} href='https://together.brave.com/widget'>
-                  <TogetherIcon />
-                </IconLink>
-            }
           </Navigation>
         </S.GridItemNavigation>
       </>

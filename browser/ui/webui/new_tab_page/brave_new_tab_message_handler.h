@@ -33,7 +33,6 @@ class BraveNewTabMessageHandler : public content::WebUIMessageHandler,
   ~BraveNewTabMessageHandler() override;
 
   static void RegisterLocalStatePrefs(PrefRegistrySimple* local_state);
-  static void RecordInitialP3AValues(PrefService* local_state);
   static BraveNewTabMessageHandler* Create(
       content::WebUIDataSource* html_source,
       Profile* profile);

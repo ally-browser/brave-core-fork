@@ -40,12 +40,6 @@ extern const char kGreaselionConfigFileVersion[];
 enum GreaselionPreconditionValue { kMustBeFalse, kMustBeTrue, kAny };
 
 struct GreaselionPreconditions {
-  GreaselionPreconditionValue rewards_enabled = kAny;
-  GreaselionPreconditionValue twitter_tips_enabled = kAny;
-  GreaselionPreconditionValue reddit_tips_enabled = kAny;
-  GreaselionPreconditionValue github_tips_enabled = kAny;
-  GreaselionPreconditionValue auto_contribution_enabled = kAny;
-  GreaselionPreconditionValue ads_enabled = kAny;
   GreaselionPreconditionValue supports_minimum_brave_version = kAny;
 };
 

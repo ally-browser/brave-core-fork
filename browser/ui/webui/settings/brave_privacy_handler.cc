@@ -22,18 +22,8 @@
 #include "brave/browser/gcm_driver/brave_gcm_channel_status.h"
 #endif
 
-#if BUILDFLAG(BRAVE_P3A_ENABLED)
-#include "brave/components/p3a/pref_names.h"
-#endif
-
 BravePrivacyHandler::BravePrivacyHandler() {
   local_state_change_registrar_.Init(g_browser_process->local_state());
-#if BUILDFLAG(BRAVE_P3A_ENABLED)
-  local_state_change_registrar_.Add(
-      brave::kP3AEnabled,
-      base::Bind(&BravePrivacyHandler::OnP3AEnabledChanged,
-                 base::Unretained(this)));
-#endif
 }
 
 BravePrivacyHandler::~BravePrivacyHandler() {
@@ -42,15 +32,6 @@ BravePrivacyHandler::~BravePrivacyHandler() {
 
 void BravePrivacyHandler::RegisterMessages() {
   profile_ = Profile::FromWebUI(web_ui());
-
-#if BUILDFLAG(BRAVE_P3A_ENABLED)
-  web_ui()->RegisterMessageCallback(
-      "setP3AEnabled", base::BindRepeating(&BravePrivacyHandler::SetP3AEnabled,
-                                           base::Unretained(this)));
-  web_ui()->RegisterMessageCallback(
-      "getP3AEnabled", base::BindRepeating(&BravePrivacyHandler::GetP3AEnabled,
-                                           base::Unretained(this)));
-#endif
 }
 
 // static
@@ -68,34 +49,3 @@ void BravePrivacyHandler::AddLoadTimeData(content::WebUIDataSource* data_source,
                           gcm_channel_status->IsGCMEnabled());
 #endif
 }
-
-#if BUILDFLAG(BRAVE_P3A_ENABLED)
-void BravePrivacyHandler::SetP3AEnabled(const base::ListValue* args) {
-  CHECK_EQ(args->GetSize(), 1U);
-
-  bool enabled;
-  args->GetBoolean(0, &enabled);
-
-  PrefService* local_state = g_browser_process->local_state();
-  local_state->SetBoolean(brave::kP3AEnabled, enabled);
-}
-
-void BravePrivacyHandler::GetP3AEnabled(const base::ListValue* args) {
-  CHECK_EQ(args->GetSize(), 1U);
-
-  PrefService* local_state = g_browser_process->local_state();
-  bool enabled = local_state->GetBoolean(brave::kP3AEnabled);
-
-  AllowJavascript();
-  ResolveJavascriptCallback(args->GetList()[0].Clone(), base::Value(enabled));
-}
-
-void BravePrivacyHandler::OnP3AEnabledChanged() {
-  if (IsJavascriptAllowed()) {
-    PrefService* local_state = g_browser_process->local_state();
-    bool enabled = local_state->GetBoolean(brave::kP3AEnabled);
-
-    FireWebUIListener("p3a-enabled-changed", base::Value(enabled));
-  }
-}
-#endif

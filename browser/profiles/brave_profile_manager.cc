@@ -11,14 +11,11 @@
 #include <vector>
 
 #include "base/metrics/histogram_macros.h"
-#include "brave/browser/brave_rewards/rewards_service_factory.h"
 #include "brave/browser/profiles/profile_util.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_ads/browser/ads_service_factory.h"
 #include "brave/components/brave_shields/browser/ad_block_regional_service.h"
 #include "brave/components/brave_shields/browser/ad_block_service.h"
 #include "brave/components/brave_shields/browser/brave_shields_util.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/content_settings/core/browser/brave_content_settings_pref_provider.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "brave/components/tor/tor_constants.h"
@@ -40,10 +37,6 @@
 #include "content/public/browser/notification_source.h"
 #include "content/public/browser/url_data_source.h"
 #include "ui/base/l10n/l10n_util.h"
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/browser/brave_wallet/brave_wallet_service_factory.h"
-#endif
 
 #if !BUILDFLAG(USE_GCM_FROM_PLATFORM)
 #include "brave/browser/gcm_driver/brave_gcm_channel_status.h"
@@ -81,7 +74,6 @@ void BraveProfileManager::InitProfileUserPrefs(Profile* profile) {
       profile->GetPrefs());
 
   ProfileManager::InitProfileUserPrefs(profile);
-  brave::RecordInitialP3AValues(profile);
   brave::SetDefaultSearchVersion(profile, profile->IsNewProfile());
 }
 
@@ -103,11 +95,6 @@ void BraveProfileManager::DoFinalInitForServices(Profile* profile,
   ProfileManager::DoFinalInitForServices(profile, go_off_the_record);
   if (!do_final_services_init_)
     return;
-  brave_ads::AdsServiceFactory::GetForProfile(profile);
-  brave_rewards::RewardsServiceFactory::GetForProfile(profile);
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  BraveWalletServiceFactory::GetForProfile(profile);
-#endif
 #if BUILDFLAG(IPFS_ENABLED)
   ipfs::IpfsServiceFactory::GetForContext(profile);
 #endif

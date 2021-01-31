@@ -22,8 +22,6 @@ namespace {
 std::string GetPermissionRequestString(PermissionRequestType type) {
   if (type == PermissionRequestType::PERMISSION_WIDEVINE)
     return "Widevine";
-  if (type == PermissionRequestType::PERMISSION_WALLET)
-    return "Wallet";
   return GetPermissionRequestString_ChromiumImpl(type);
 }
 

@@ -15,15 +15,7 @@ describe('settings component tests', () => {
     toggleShowTopSites: () => null,
     showClock: true,
     showStats: true,
-    showTopSites: true,
-    toggleShowRewards: () => undefined,
-    toggleShowBinance: () => undefined,
-    toggleBrandedWallpaperOptIn: () => undefined,
-    brandedWallpaperOptIn: false,
-    allowSponsoredWallpaperUI: false,
-    showRewards: false,
-    showBinance: false,
-    binanceSupported: false
+    showTopSites: true
   }
 
   it('should not render the settings menu', () => {
@@ -40,14 +32,6 @@ describe('settings component tests', () => {
         showClock={mockProps.showClock}
         showStats={mockProps.showStats}
         showTopSites={mockProps.showTopSites}
-        toggleShowRewards={mockProps.toggleShowRewards}
-        toggleShowBinance={mockProps.toggleShowBinance}
-        toggleBrandedWallpaperOptIn={mockProps.toggleBrandedWallpaperOptIn}
-        brandedWallpaperOptIn={mockProps.brandedWallpaperOptIn}
-        allowSponsoredWallpaperUI={mockProps.allowSponsoredWallpaperUI}
-        showRewards={mockProps.showRewards}
-        showBinance={mockProps.showBinance}
-        binanceSupported={mockProps.binanceSupported}
       />)
     expect(wrapper.find(SettingsMenu)).toHaveLength(0)
   })
@@ -66,14 +50,6 @@ describe('settings component tests', () => {
         showClock={mockProps.showClock}
         showStats={mockProps.showStats}
         showTopSites={mockProps.showTopSites}
-        toggleShowRewards={mockProps.toggleShowRewards}
-        toggleShowBinance={mockProps.toggleShowBinance}
-        toggleBrandedWallpaperOptIn={mockProps.toggleBrandedWallpaperOptIn}
-        brandedWallpaperOptIn={mockProps.brandedWallpaperOptIn}
-        allowSponsoredWallpaperUI={mockProps.allowSponsoredWallpaperUI}
-        showRewards={mockProps.showRewards}
-        showBinance={mockProps.showBinance}
-        binanceSupported={mockProps.binanceSupported}
       />)
     expect(wrapper.find(SettingsMenu)).toHaveLength(1)
   })

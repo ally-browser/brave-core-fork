@@ -32,9 +32,6 @@ const start = (passthroughArgs, buildConfig = config.defaultBuildConfig, options
   if (options.disable_brave_extension) {
     braveArgs.push('--disable-brave-extension')
   }
-  if (options.disable_brave_rewards_extension) {
-    braveArgs.push('--disable-brave-rewards-extension')
-  }
   if (options.disable_pdfjs_extension) {
     braveArgs.push('--disable-pdfjs-extension')
   }
@@ -59,21 +56,6 @@ const start = (passthroughArgs, buildConfig = config.defaultBuildConfig, options
   }
   if (options.show_component_extensions) {
     braveArgs.push('--show-component-extension-options')
-  }
-  if (options.rewards) {
-    braveArgs.push(`--rewards=${options.rewards}`)
-  }
-  if (options.brave_ads_testing) {
-    braveArgs.push('--brave-ads-testing')
-  }
-  if (options.brave_ads_debug) {
-    braveArgs.push('--brave-ads-debug')
-  }
-  if (options.brave_ads_production) {
-    braveArgs.push('--brave-ads-production')
-  }
-  if (options.brave_ads_staging) {
-    braveArgs.push('--brave-ads-staging')
   }
   braveArgs = braveArgs.concat(passthroughArgs)
 

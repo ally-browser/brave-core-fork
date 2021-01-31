@@ -27,7 +27,6 @@ Polymer({
     },
 
     webRTCPolicy_: String,
-    p3aEnabled_: Boolean
   },
 
   /** @private {?settings.BravePrivacyBrowserProxy} */
@@ -41,18 +40,6 @@ Polymer({
   /** @override */
   ready: function() {
     // Used for first time initialization of checked state.
-    // Can't use `prefs` property of `settings-toggle-button`
-    // because p3a enabled is a local state setting.
-    this.browserProxy_.getP3AEnabled().then(enabled => {
-      this.p3aEnabled_ = enabled;
-    });
-    this.addWebUIListener('p3a-enabled-changed', (enabled) => {
-      this.p3aEnabled_ = enabled
-    })
-  },
-
-  onP3AEnabledChange_: function() {
-    this.browserProxy_.setP3AEnabled(this.$.p3aEnabled.checked);
   },
 
   shouldShowRestart_: function(enabled) {

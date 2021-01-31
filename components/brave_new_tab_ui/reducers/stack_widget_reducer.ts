@@ -6,11 +6,6 @@ import { Reducer } from 'redux'
 import { types } from '../constants/stack_widget_types'
 
 const widgets = {
-  'rewards': 'showRewards',
-  'binance': 'showBinance',
-  'together': 'showTogether',
-  'gemini': 'showGemini',
-  'cryptoDotCom': 'showCryptoDotCom'
 }
 
 const removeStackWidget = (widget: NewTab.StackWidget, state: NewTab.State): NewTab.State => {

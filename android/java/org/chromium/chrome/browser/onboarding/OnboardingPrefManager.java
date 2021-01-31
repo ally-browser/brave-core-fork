@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import org.chromium.base.ContextUtils;
 import org.chromium.chrome.browser.BraveAdsNativeHelper;
 import org.chromium.chrome.browser.BraveFeatureList;
-import org.chromium.chrome.browser.BraveRewardsPanelPopup;
 import org.chromium.chrome.browser.flags.ChromeFeatureList;
 import org.chromium.chrome.browser.notifications.BraveOnboardingNotification;
 import org.chromium.chrome.browser.preferences.BravePref;
@@ -33,13 +32,10 @@ import java.util.Map;
  */
 public class OnboardingPrefManager {
     private static final String PREF_ONBOARDING = "onboarding";
-    private static final String PREF_P3A_ONBOARDING = "p3a_onboarding";
     private static final String PREF_CROSS_PROMO_MODAL = "cross_promo_modal";
     private static final String PREF_ONBOARDING_V2 = "onboarding_v2";
     private static final String PREF_NEXT_ONBOARDING_DATE = "next_onboarding_date";
     private static final String PREF_NEXT_CROSS_PROMO_MODAL_DATE = "next_cross_promo_modal_date";
-    private static final String PREF_ONBOARDING_FOR_SKIP = "onboarding_for_skip";
-    private static final String PREF_ONBOARDING_SKIP_COUNT = "onboarding_skip_count";
     private static final String PREF_SEARCH_ENGINE_ONBOARDING = "search_engine_onboarding";
     public static final String PREF_BRAVE_STATS = "brave_stats";
     public static final String PREF_BRAVE_STATS_NOTIFICATION = "brave_stats_notification";
@@ -57,8 +53,6 @@ public class OnboardingPrefManager {
     private final SharedPreferences mSharedPreferences;
 
     public static final int NEW_USER_ONBOARDING = 0;
-    public static final int EXISTING_USER_REWARDS_OFF_ONBOARDING = 1;
-    public static final int EXISTING_USER_REWARDS_ON_ONBOARDING = 2;
 
     private static boolean isOnboardingNotificationShown;
 
@@ -99,22 +93,6 @@ public class OnboardingPrefManager {
     public void setOnboardingShown(boolean isShown) {
         SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
         sharedPreferencesEditor.putBoolean(PREF_ONBOARDING, isShown);
-        sharedPreferencesEditor.apply();
-    }
-
-    /**
-     * Returns the user preference for whether the onboarding is shown.
-     */
-    public boolean isP3aOnboardingShown() {
-        return mSharedPreferences.getBoolean(PREF_P3A_ONBOARDING, false);
-    }
-
-    /**
-     * Sets the user preference for whether the onboarding is shown.
-     */
-    public void setP3aOnboardingShown(boolean isShown) {
-        SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
-        sharedPreferencesEditor.putBoolean(PREF_P3A_ONBOARDING, isShown);
         sharedPreferencesEditor.apply();
     }
 
@@ -184,25 +162,6 @@ public class OnboardingPrefManager {
         SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
         sharedPreferencesEditor.putLong(PREF_NEXT_ONBOARDING_DATE, nextDate);
         sharedPreferencesEditor.apply();
-    }
-
-    public boolean hasOnboardingShownForSkip() {
-        return mSharedPreferences.getBoolean(PREF_ONBOARDING_FOR_SKIP, false);
-    }
-
-    public void setOnboardingShownForSkip(boolean isShown) {
-        SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
-        sharedPreferencesEditor.putBoolean(PREF_ONBOARDING_FOR_SKIP, isShown);
-        sharedPreferencesEditor.apply();
-    }
-
-    public boolean showOnboardingForSkip(Context context) {
-        boolean shouldShow = PackageUtils.isFirstInstall(context)
-                             && !hasOnboardingShownForSkip()
-                             && !BraveAdsNativeHelper.nativeIsBraveAdsEnabled(Profile.getLastUsedRegularProfile())
-                             && ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS)
-                             && (getNextOnboardingDate() > 0 && System.currentTimeMillis() > getNextOnboardingDate());
-        return shouldShow;
     }
 
     public boolean isAdsAvailable() {

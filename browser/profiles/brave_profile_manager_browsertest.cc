@@ -7,8 +7,6 @@
 
 #include "base/strings/utf_string_conversions.h"
 #include "brave/browser/brave_browser_process_impl.h"
-#include "brave/browser/brave_rewards/rewards_service_factory.h"
-#include "brave/components/brave_ads/browser/ads_service_factory.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "brave/components/tor/tor_constants.h"
 #include "chrome/browser/browser_process.h"
@@ -162,21 +160,6 @@ IN_PROC_BROWSER_TEST_F(BraveProfileManagerTest,
       profile_manager->GetProfileByPath(ProfileManager::GetGuestProfilePath());
   ASSERT_TRUE(otr_profile->IsOffTheRecord());
   ASSERT_TRUE(guest_profile->IsGuestSession());
-
-  EXPECT_NE(
-      brave_rewards::RewardsServiceFactory::GetForProfile(profile), nullptr);
-  EXPECT_EQ(
-      brave_rewards::RewardsServiceFactory::GetForProfile(otr_profile),
-      nullptr);
-  EXPECT_EQ(
-      brave_rewards::RewardsServiceFactory::GetForProfile(guest_profile),
-      nullptr);
-
-  EXPECT_NE(brave_ads::AdsServiceFactory::GetForProfile(profile), nullptr);
-  EXPECT_EQ(brave_ads::AdsServiceFactory::GetForProfile(otr_profile),
-            nullptr);
-  EXPECT_EQ(brave_ads::AdsServiceFactory::GetForProfile(guest_profile),
-            nullptr);
 
 #if BUILDFLAG(IPFS_ENABLED)
   EXPECT_NE(ipfs::IpfsServiceFactory::GetForContext(profile), nullptr);

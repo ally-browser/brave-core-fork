@@ -1,16 +1,9 @@
 import("//brave/build/config.gni")
-import("//brave/components/binance/browser/buildflags/buildflags.gni")
-import("//brave/components/brave_ads/browser/buildflags/buildflags.gni")
 import(
     "//brave/components/brave_perf_predictor/browser/buildflags/buildflags.gni")
-import("//brave/components/brave_referrals/buildflags/buildflags.gni")
 import("//brave/components/brave_sync/buildflags/buildflags.gni")
-import("//brave/components/brave_together/buildflags/buildflags.gni")
-import("//brave/components/brave_wallet/buildflags/buildflags.gni")
 import("//brave/components/brave_wayback_machine/buildflags/buildflags.gni")
 import("//brave/components/brave_webtorrent/browser/buildflags/buildflags.gni")
-import("//brave/components/crypto_dot_com/browser/buildflags/buildflags.gni")
-import("//brave/components/gemini/browser/buildflags/buildflags.gni")
 import("//brave/components/greaselion/browser/buildflags/buildflags.gni")
 import("//brave/components/ipfs/buildflags/buildflags.gni")
 import("//brave/components/speedreader/buildflags.gni")
@@ -29,9 +22,6 @@ source_set("browser_process") {
   visibility = [
     "//brave:browser_dependencies",
     "//brave/browser/*",
-    "//brave/components/brave_ads/test:*",
-    "//brave/components/brave_rewards/browser:testutil",
-    "//brave/components/brave_rewards/test:*",
     "//brave/components/ipfs/test:*",
     "//brave/test:*",
     "//chrome/browser/*",
@@ -80,8 +70,6 @@ source_set("browser_process") {
     "search_engines/search_engine_provider_service_factory.h",
     "search_engines/search_engine_provider_util.cc",
     "search_engines/search_engine_provider_util.h",
-    "search_engines/search_engine_tracker.cc",
-    "search_engines/search_engine_tracker.h",
     "search_engines/tor_window_search_engine_provider_service.cc",
     "search_engines/tor_window_search_engine_provider_service.h",
     "update_util.cc",
@@ -106,14 +94,12 @@ source_set("browser_process") {
   deps = [
     ":sparkle_buildflags",
     ":version_info",
-    "brave_stats:stats_updater",
     "browsing_data",
     "content_settings",
     "download",
     "ephemeral_storage",
     "farbling",
     "net",
-    "ntp_background_images",
     "profiles",
     "renderer_context_menu",
     "search",
@@ -121,40 +107,31 @@ source_set("browser_process") {
     "themes",
     "ui",
     "//base",
-    "//brave/browser/brave_ads/notifications",
     "//brave/browser/net",
     "//brave/browser/translate/buildflags",
     "//brave/common",
     "//brave/common:pref_names",
-    "//brave/components/binance/browser/buildflags",
     "//brave/components/brave_component_updater/browser",
     "//brave/components/brave_drm",
-    "//brave/components/brave_referrals/buildflags",
     "//brave/components/brave_shields/browser",
     "//brave/components/brave_shields/common",
     "//brave/components/brave_sync",
-    "//brave/components/brave_together/browser",
-    "//brave/components/brave_wallet/buildflags",
     "//brave/components/brave_wayback_machine:buildflags",
     "//brave/components/brave_webtorrent/browser/buildflags",
     "//brave/components/content_settings/core/browser",
     "//brave/components/cosmetic_filters/browser",
     "//brave/components/cosmetic_filters/common:mojom",
-    "//brave/components/crypto_dot_com/browser/buildflags",
-    "//brave/components/gemini/browser/buildflags",
     "//brave/components/greaselion/browser/buildflags",
     "//brave/components/ipfs/buildflags",
     "//brave/components/l10n/browser",
-    "//brave/components/ntp_background_images/browser",
     "//brave/components/ntp_tiles",
-    "//brave/components/p3a",
     "//brave/components/resources",
     "//brave/components/speedreader:buildflags",
     "//brave/components/tor/buildflags",
+    "//brave/components/brave_user_model/browser",
     "//brave/components/weekly_storage",
+    "//brave/components/brave_user_model/browser",
     "//brave/services/network/public/cpp",
-    "//brave/ui/brave_ads",
-    "//brave/ui/brave_ads/public/cpp",
     "//chrome/common",
     "//components/autofill/core/common",
     "//components/browsing_data/core",
@@ -162,6 +139,7 @@ source_set("browser_process") {
     "//components/content_settings/browser",
     "//components/content_settings/core/browser",
     "//components/content_settings/core/common",
+    "//components/dom_distiller/core",
     "//components/embedder_support",
     "//components/gcm_driver:gcm_buildflags",
     "//components/gcm_driver:gcm_driver",
@@ -192,13 +170,6 @@ source_set("browser_process") {
     "//ui/base",
   ]
 
-  if (brave_wallet_enabled) {
-    deps += [
-      "brave_wallet",
-      "//brave/components/brave_wallet",
-    ]
-  }
-
   if (enable_greaselion) {
     deps += [
       "greaselion",
@@ -212,8 +183,6 @@ source_set("browser_process") {
 
   if (!is_android) {
     sources += [
-      "p3a/p3a_core_metrics.cc",
-      "p3a/p3a_core_metrics.h",
     ]
 
     deps += [
@@ -223,63 +192,6 @@ source_set("browser_process") {
     ]
   } else {
     deps += [ "android:android_browser_process" ]
-  }
-
-  if (binance_enabled) {
-    sources += [
-      "binance/binance_protocol_handler.cc",
-      "binance/binance_protocol_handler.h",
-      "binance/binance_service_factory.cc",
-      "binance/binance_service_factory.h",
-    ]
-
-    deps += [
-      "//brave/components/binance/browser",
-      "//components/country_codes",
-    ]
-
-    if (is_android) {
-      sources += [
-        "binance/android/binance_native_worker.cc",
-        "binance/android/binance_native_worker.h",
-      ]
-    }
-  }
-
-  if (gemini_enabled) {
-    sources += [
-      "gemini/gemini_protocol_handler.cc",
-      "gemini/gemini_protocol_handler.h",
-      "gemini/gemini_service_factory.cc",
-      "gemini/gemini_service_factory.h",
-    ]
-
-    deps += [
-      "//base",
-      "//brave/common",
-      "//brave/components/gemini/browser",
-      "//components/country_codes",
-      "//components/keyed_service/content",
-      "//components/user_prefs",
-      "//content/public/browser",
-      "//ui/base",
-      "//url",
-    ]
-  }
-
-  if (crypto_dot_com_enabled) {
-    sources += [
-      "crypto_dot_com/crypto_dot_com_service_factory.cc",
-      "crypto_dot_com/crypto_dot_com_service_factory.h",
-    ]
-
-    deps += [
-      "//base",
-      "//brave/browser/profiles",
-      "//brave/components/crypto_dot_com/browser",
-      "//brave/components/crypto_dot_com/common",
-      "//components/keyed_service/content",
-    ]
   }
 
   if (ipfs_enabled) {
@@ -302,10 +214,6 @@ source_set("browser_process") {
     ]
   }
 
-  if (brave_together_enabled) {
-    deps += [ "//brave/components/brave_together/browser" ]
-  }
-
   if (enable_tor) {
     deps += [
       "//brave/browser/tor",
@@ -317,61 +225,6 @@ source_set("browser_process") {
     deps += [
       "extensions",
       "//extensions/common:common_constants",
-    ]
-  }
-
-  if (enable_brave_referrals) {
-    sources += [
-      "brave_referrals/brave_referrals_service_factory.cc",
-      "brave_referrals/brave_referrals_service_factory.h",
-    ]
-    deps += [
-      "//brave/components/brave_referrals/browser",
-      "//brave/components/brave_referrals/common",
-      "//brave/components/brave_stats/browser",
-    ]
-  }
-
-  if (brave_ads_enabled) {
-    deps += [
-      "//brave/components/brave_ads/browser",
-      "//brave/components/brave_user_model/browser",
-      "//components/dom_distiller/core",
-    ]
-  }
-
-  if (brave_rewards_enabled) {
-    sources += [
-      "brave_rewards/rewards_service_factory.cc",
-      "brave_rewards/rewards_service_factory.h",
-      "brave_rewards/rewards_tab_helper.cc",
-      "brave_rewards/rewards_tab_helper.h",
-    ]
-
-    if (enable_extensions) {
-      sources += [
-        "brave_rewards/extension_rewards_notification_service_observer.cc",
-        "brave_rewards/extension_rewards_notification_service_observer.h",
-        "brave_rewards/extension_rewards_service_observer.cc",
-        "brave_rewards/extension_rewards_service_observer.h",
-      ]
-    }
-
-    if (is_android) {
-      sources += [
-        "brave_rewards/android/brave_rewards_native_worker.cc",
-        "brave_rewards/android/brave_rewards_native_worker.h",
-      ]
-    } else {
-      sources += [
-        "brave_rewards/tip_dialog.cc",
-        "brave_rewards/tip_dialog.h",
-      ]
-    }
-
-    deps += [
-      "//brave/components/brave_rewards/browser",
-      "//brave/vendor/bat-native-ledger:headers",
     ]
   }
 

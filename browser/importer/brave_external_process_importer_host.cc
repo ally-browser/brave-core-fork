@@ -13,7 +13,6 @@
 #include "base/json/json_reader.h"
 #include "base/task/post_task.h"
 #include "base/task/task_traits.h"
-#include "brave/browser/importer/brave_importer_p3a.h"
 #include "brave/common/importer/chrome_importer_utils.h"
 #include "brave/common/importer/importer_constants.h"
 
@@ -109,9 +108,6 @@ void BraveExternalProcessImporterHost::OnGetChromeExtensionsList(
 }
 
 void BraveExternalProcessImporterHost::NotifyImportEnded() {
-  if (!cancelled_)
-    RecordImporterP3A(source_profile_.importer_type);
-
   // If user chooses extension importing, start importing extensions.
   // and NotifyImportEnded() will be called from OnGetChromeExtensionsList().
   // Handling extensions importing after finishing all other properties makes

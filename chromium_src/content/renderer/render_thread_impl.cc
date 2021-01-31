@@ -9,17 +9,7 @@
   WebSecurityPolicy::RegisterURLSchemeAsNotAllowingJavascriptURLs( \
       brave_scheme); \
                      \
-  WebString binance_scheme(WebString::FromASCII(kBinanceScheme)); \
-  WebSecurityPolicy::RegisterURLSchemeAsDisplayIsolated(binance_scheme); \
-  WebSecurityPolicy::RegisterURLSchemeAsNotAllowingJavascriptURLs( \
-      binance_scheme); \
-                       \
-  WebString gemini_scheme(WebString::FromASCII(kGeminiScheme)); \
-  WebSecurityPolicy::RegisterURLSchemeAsDisplayIsolated(gemini_scheme); \
-  WebSecurityPolicy::RegisterURLSchemeAsNotAllowingJavascriptURLs( \
-      gemini_scheme); \
-                      \
-  WebString ipfs_scheme(WebString::FromASCII("ipfs")); \
+   WebString ipfs_scheme(WebString::FromASCII("ipfs")); \
   WebSecurityPolicy::RegisterURLSchemeAsSupportingFetchAPI(ipfs_scheme); \
                     \
   WebString ipns_scheme(WebString::FromASCII("ipns")); \

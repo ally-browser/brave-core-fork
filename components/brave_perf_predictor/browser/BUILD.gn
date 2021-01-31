@@ -26,8 +26,6 @@ source_set("browser") {
     "named_third_party_registry.h",
     "named_third_party_registry_factory.cc",
     "named_third_party_registry_factory.h",
-    "p3a_bandwidth_savings_tracker.cc",
-    "p3a_bandwidth_savings_tracker.h",
     "perf_predictor_page_metrics_observer.cc",
     "perf_predictor_page_metrics_observer.h",
     "perf_predictor_tab_helper.cc",

@@ -10,7 +10,6 @@
 // clang-format off
 #define BRAVE_PERMISSION_REQUEST_TYPES \
   PERMISSION_WIDEVINE, \
-  PERMISSION_WALLET,
 // clang-format on
 #else
 #define BRAVE_PERMISSION_REQUEST_TYPES

@@ -30,16 +30,6 @@ using content::WebUIMessageHandler;
 
 namespace {
 
-void RecordP3AHistogram(int screen_number, bool finished) {
-  int answer = 0;
-  if (finished) {
-    answer = 3;
-  } else {
-    answer = std::min(screen_number, 2);
-  }
-  UMA_HISTOGRAM_EXACT_LINEAR("Brave.Welcome.InteractionStatus", answer, 3);
-}
-
 // The handler for Javascript messages for the chrome://welcome page
 class WelcomeDOMHandler : public WebUIMessageHandler {
  public:
@@ -52,18 +42,12 @@ class WelcomeDOMHandler : public WebUIMessageHandler {
 
  private:
   void HandleImportNowRequested(const base::ListValue* args);
-  void HandleRecordP3A(const base::ListValue* args);
   Browser* GetBrowser();
-
-  int screen_number_ = 0;
-  bool finished_ = false;
-  bool skipped_ = false;
 
   DISALLOW_COPY_AND_ASSIGN(WelcomeDOMHandler);
 };
 
 WelcomeDOMHandler::~WelcomeDOMHandler() {
-  RecordP3AHistogram(screen_number_, finished_);
 }
 
 Browser* WelcomeDOMHandler::GetBrowser() {
@@ -74,31 +58,12 @@ void WelcomeDOMHandler::RegisterMessages() {
   web_ui()->RegisterMessageCallback("importNowRequested",
       base::BindRepeating(&WelcomeDOMHandler::HandleImportNowRequested,
                           base::Unretained(this)));
-  web_ui()->RegisterMessageCallback("recordP3A",
-      base::BindRepeating(&WelcomeDOMHandler::HandleRecordP3A,
-                          base::Unretained(this)));
 }
 
 void WelcomeDOMHandler::HandleImportNowRequested(const base::ListValue* args) {
   chrome::ShowSettingsSubPageInTabbedBrowser(GetBrowser(),
       chrome::kImportDataSubPage);
 }
-
-void WelcomeDOMHandler::HandleRecordP3A(const base::ListValue* args) {
-  if (!args->GetInteger(0, &screen_number_))
-    return;
-  if (!args->GetBoolean(1, &finished_))
-    return;
-  if (!args->GetBoolean(2, &skipped_))
-    return;
-
-  if (screen_number_) {
-    // It is 1-based on JS side, we want 0-based.
-    screen_number_--;
-  }
-  RecordP3AHistogram(screen_number_, finished_);
-}
-
 
 }  // namespace
 

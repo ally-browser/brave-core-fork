@@ -59,12 +59,6 @@ const char kMessages[] = "messages";
 // to preserve some sense of cross-browser targetting of the scripts.
 const char kMinimumBraveVersion[] = "minimum_brave_version";
 // precondition keys
-const char kRewards[] = "rewards-enabled";
-const char kTwitterTips[] = "twitter-tips-enabled";
-const char kRedditTips[] = "reddit-tips-enabled";
-const char kGithubTips[] = "github-tips-enabled";
-const char kAutoContribution[] = "auto-contribution-enabled";
-const char kAds[] = "ads-enabled";
 const char kSupportsMinimumBraveVersion[] =
     "supports-minimum-brave-version";
 
@@ -90,19 +84,7 @@ void GreaselionRule::Parse(base::DictionaryValue* preconditions_value,
   if (preconditions_value) {
     for (const auto& kv : preconditions_value->DictItems()) {
       GreaselionPreconditionValue condition = ParsePrecondition(kv.second);
-      if (kv.first == kRewards) {
-        preconditions_.rewards_enabled = condition;
-      } else if (kv.first == kTwitterTips) {
-        preconditions_.twitter_tips_enabled = condition;
-      } else if (kv.first == kRedditTips) {
-        preconditions_.reddit_tips_enabled = condition;
-      } else if (kv.first == kGithubTips) {
-        preconditions_.github_tips_enabled = condition;
-      } else if (kv.first == kAutoContribution) {
-        preconditions_.auto_contribution_enabled = condition;
-      } else if (kv.first == kAds) {
-        preconditions_.ads_enabled = condition;
-      } else if (kv.first == kSupportsMinimumBraveVersion) {
+      if (kv.first == kSupportsMinimumBraveVersion) {
         preconditions_.supports_minimum_brave_version = condition;
       } else {
         LOG(INFO) << "Greaselion encountered an unknown precondition: "
@@ -156,26 +138,8 @@ bool GreaselionRule::PreconditionFulfilled(
 bool GreaselionRule::Matches(
     GreaselionFeatures state, const base::Version& browser_version) const {
   // Validate against preconditions.
-  if (!PreconditionFulfilled(preconditions_.rewards_enabled,
-                             state[greaselion::REWARDS]))
-    return false;
-  if (!PreconditionFulfilled(preconditions_.twitter_tips_enabled,
-                             state[greaselion::TWITTER_TIPS]))
-    return false;
-  if (!PreconditionFulfilled(preconditions_.reddit_tips_enabled,
-                             state[greaselion::REDDIT_TIPS]))
-    return false;
-  if (!PreconditionFulfilled(preconditions_.github_tips_enabled,
-                             state[greaselion::GITHUB_TIPS]))
-    return false;
-  if (!PreconditionFulfilled(preconditions_.auto_contribution_enabled,
-                             state[greaselion::AUTO_CONTRIBUTION]))
-    return false;
   if (!PreconditionFulfilled(preconditions_.supports_minimum_brave_version,
                           state[greaselion::SUPPORTS_MINIMUM_BRAVE_VERSION]))
-    return false;
-  if (!PreconditionFulfilled(preconditions_.ads_enabled,
-                             state[greaselion::ADS]))
     return false;
   // Validate against browser version.
   if (base::Version::IsValidWildcardString(minimum_brave_version_)) {

@@ -4,8 +4,6 @@
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_rewards/common/pref_names.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/brave_wayback_machine/buildflags.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "chrome/browser/net/prediction_options.h"
@@ -23,11 +21,6 @@
 #if BUILDFLAG(IPFS_ENABLED)
 #include "brave/components/ipfs/ipfs_constants.h"
 #include "brave/components/ipfs/pref_names.h"
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/components/brave_wallet/brave_wallet_constants.h"
-#include "brave/components/brave_wallet/pref_names.h"
 #endif
 
 #if BUILDFLAG(ENABLE_BRAVE_WAYBACK_MACHINE)
@@ -66,8 +59,6 @@ IN_PROC_BROWSER_TEST_F(BraveProfilePrefsBrowserTest, MiscBravePrefs) {
       kBraveWaybackMachineEnabled));
 #endif
   EXPECT_TRUE(browser()->profile()->GetPrefs()->GetBoolean(kHangoutsEnabled));
-  EXPECT_FALSE(browser()->profile()->GetPrefs()->GetBoolean(
-      brave_rewards::prefs::kHideButton));
 #if BUILDFLAG(IPFS_ENABLED)
   EXPECT_EQ(browser()->profile()->GetPrefs()->GetInteger(kIPFSResolveMethod),
             static_cast<int>((ipfs::IPFSResolveMethodTypes::IPFS_ASK)));
@@ -78,15 +69,6 @@ IN_PROC_BROWSER_TEST_F(BraveProfilePrefsBrowserTest, MiscBravePrefs) {
 #endif
   EXPECT_FALSE(
       browser()->profile()->GetPrefs()->GetBoolean(kIPFSCompanionEnabled));
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  EXPECT_EQ(
-      browser()->profile()->GetPrefs()->GetInteger(kBraveWalletWeb3Provider),
-      static_cast<int>(BraveWalletWeb3ProviderTypes::ASK));
-  EXPECT_FALSE(browser()->profile()->GetPrefs()->GetBoolean(
-      kLoadCryptoWalletsOnStartup));
-  EXPECT_FALSE(
-      browser()->profile()->GetPrefs()->GetBoolean(kOptedIntoCryptoWallets));
-#endif
   EXPECT_FALSE(
       browser()->profile()->GetPrefs()->GetBoolean(kMRUCyclingEnabled));
 #if !BUILDFLAG(USE_GCM_FROM_PLATFORM)

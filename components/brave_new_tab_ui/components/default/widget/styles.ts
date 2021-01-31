@@ -44,8 +44,6 @@ export const StyledWidgetMenuContainer = styled<WidgetPaddingProps, 'div'>('div'
 interface WidgetVisibilityProps {
   widgetMenuPersist: boolean
   preventFocus?: boolean
-  isCrypto?: boolean
-  isCryptoTab?: boolean
   isForeground?: boolean
 }
 
@@ -56,17 +54,17 @@ interface WidgetPaddingProps {
 export const StyledWidget = styled<WidgetVisibilityProps & WidgetPaddingProps, 'div'>('div')`
   padding: ${({ paddingType }) => getWidgetPadding(paddingType)};
   max-width: 100%;
-  width: ${p => p.isCrypto ? '284px' : 'initial'};
+  width: initial;
   position: relative;
   transition: background 0.5s ease;
-  border-radius: ${p => p.isCrypto ? '6px' : '16px'};
+  border-radius: 16px;
 
   ${StyledWidgetMenuContainer}:hover & {
     background: rgba(33, 37, 41, 0.48);
   }
 
   // Also hover when menu button has been clicked
-  ${ p => (p.widgetMenuPersist && !p.isCryptoTab) && `
+  ${ p => (p.widgetMenuPersist) && `
     background: rgba(33, 37, 41, 0.48);
   `}
 `

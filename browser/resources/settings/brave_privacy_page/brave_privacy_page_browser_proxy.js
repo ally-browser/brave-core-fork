@@ -10,14 +10,6 @@ cr.define('settings', function() {
   /** @interface */
   /* #export */ class BravePrivacyBrowserProxy {
     /**
-     * @return {!Promise<string>}
-     */
-    getP3AEnabled() {}
-    /**
-     * @param {boolean} enabled (true/false).
-     */
-    setP3AEnabled(value) {}
-    /**
      * @return {boolean}
      */
     wasPushMessagingEnabledAtStartup() {}
@@ -27,15 +19,6 @@ cr.define('settings', function() {
    * @implements {settings.BravePrivacyBrowserProxy}
    */
   /* #export */ class BravePrivacyBrowserProxyImpl {
-    /** @overrides */
-    getP3AEnabled() {
-      return cr.sendWithPromise('getP3AEnabled');
-    }
-
-    setP3AEnabled(value) {
-      chrome.send('setP3AEnabled', [value])
-    }
-
     wasPushMessagingEnabledAtStartup() {
       return loadTimeData.getBoolean('pushMessagingEnabledAtStartup');
     }

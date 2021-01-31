@@ -49,7 +49,6 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
     private static final String PREF_CONTENT_SETTINGS = "content_settings";
     private static final String PREF_ABOUT_CHROME = "about_chrome";
     private static final String PREF_BACKGROUND_IMAGES = "backgroud_images";
-    private static final String PREF_BRAVE_REWARDS = "brave_rewards";
     private static final String PREF_HOMEPAGE = "homepage";
     private static final String PREF_USE_CUSTOM_TABS = "use_custom_tabs";
     private static final String PREF_LANGUAGES = "languages";
@@ -100,11 +99,6 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
 
         rearrangePreferenceOrders();
 
-        if (!ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS) ||
-                BravePrefServiceBridge.getInstance().getSafetynetCheckFailed()) {
-            removePreferenceIfPresent(PREF_BRAVE_REWARDS);
-        }
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M 
             || (NTPUtil.isReferralEnabled() && NTPBackgroundImagesBridge.enableSponsoredImages())) {
             removePreferenceIfPresent(PREF_BACKGROUND_IMAGES);
@@ -139,7 +133,6 @@ public class BraveMainPreferencesBase extends BravePreferenceFragment {
         }
         findPreference(PREF_ADVANCED_SECTION).setOrder(++order);
         findPreference(PREF_PRIVACY).setOrder(++order);
-        findPreference(PREF_BRAVE_REWARDS).setOrder(++order);
         findPreference(PREF_SYNC).setOrder(++order);
         findPreference(PREF_ACCESSIBILITY).setOrder(++order);
         findPreference(PREF_CONTENT_SETTINGS).setOrder(++order);

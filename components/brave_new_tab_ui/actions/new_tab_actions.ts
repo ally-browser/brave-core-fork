@@ -20,18 +20,11 @@ export const statsUpdated = (stats: Stats) =>
 
 export const init = createAction<void>('page init')
 
-export const dismissTogetherPrompt = createAction('dismiss together prompt')
-
 export const privateTabDataUpdated = (data: PrivateTabData) =>
   action(types.NEW_TAB_PRIVATE_TAB_DATA_UPDATED, data)
 
 export const torTabDataUpdated = (data: TorTabData) =>
   action(types.NEW_TAB_TOR_TAB_DATA_UPDATED, data)
-
-export const dismissBrandedWallpaperNotification = (isUserAction: boolean) =>
-  action(types.NEW_TAB_DISMISS_BRANDED_WALLPAPER_NOTIFICATION, {
-    isUserAction
-  })
 
 export const preferencesUpdated = (preferences: NewTab.Preferences) =>
   action(types.NEW_TAB_PREFERENCES_UPDATED, preferences)

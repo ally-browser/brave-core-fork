@@ -10,9 +10,7 @@
 
 #include "brave/browser/ui/brave_browser_command_controller.h"
 #include "brave/browser/ui/browser_commands.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_sync/buildflags/buildflags.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/tor/buildflags/buildflags.h"
 #include "chrome/app/chrome_command_ids.h"
 #include "chrome/browser/chrome_notification_types.h"
@@ -71,15 +69,9 @@ IN_PROC_BROWSER_TEST_F(BraveAppMenuBrowserTest, MenuOrderTest) {
 #if BUILDFLAG(ENABLE_TOR)
     IDC_NEW_OFFTHERECORD_WINDOW_TOR,
 #endif
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-    IDC_SHOW_BRAVE_REWARDS,
-#endif
     IDC_RECENT_TABS_MENU,
     IDC_BOOKMARKS_MENU,
     IDC_SHOW_DOWNLOADS,
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-    IDC_SHOW_BRAVE_WALLET,
-#endif
     IDC_MANAGE_EXTENSIONS,
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
     IDC_SHOW_BRAVE_SYNC,
@@ -115,14 +107,8 @@ IN_PROC_BROWSER_TEST_F(BraveAppMenuBrowserTest, MenuOrderTest) {
 #if BUILDFLAG(ENABLE_TOR)
     IDC_NEW_OFFTHERECORD_WINDOW_TOR,
 #endif
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-    IDC_SHOW_BRAVE_REWARDS,
-#endif
     IDC_BOOKMARKS_MENU,
     IDC_SHOW_DOWNLOADS,
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-    IDC_SHOW_BRAVE_WALLET,
-#endif
     IDC_MANAGE_EXTENSIONS,
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
     IDC_SHOW_BRAVE_SYNC,
@@ -181,14 +167,8 @@ IN_PROC_BROWSER_TEST_F(BraveAppMenuBrowserTest, MenuOrderTest) {
 #if BUILDFLAG(ENABLE_TOR)
     IDC_NEW_OFFTHERECORD_WINDOW_TOR,
 #endif
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-    IDC_SHOW_BRAVE_REWARDS,
-#endif
     IDC_RECENT_TABS_MENU,
     IDC_BOOKMARKS_MENU,
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-    IDC_SHOW_BRAVE_WALLET,
-#endif
     IDC_MANAGE_EXTENSIONS,
     IDC_ADD_NEW_PROFILE,
     IDC_OPEN_GUEST_PROFILE,
@@ -216,14 +196,8 @@ IN_PROC_BROWSER_TEST_F(BraveAppMenuBrowserTest, MenuOrderTest) {
     IDC_NEW_WINDOW,
     IDC_NEW_INCOGNITO_WINDOW,
     IDC_NEW_OFFTHERECORD_WINDOW_TOR,
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-    IDC_SHOW_BRAVE_REWARDS,
-#endif
     IDC_BOOKMARKS_MENU,
     IDC_SHOW_DOWNLOADS,
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-    IDC_SHOW_BRAVE_WALLET,
-#endif
 #if BUILDFLAG(ENABLE_BRAVE_SYNC)
     IDC_SHOW_BRAVE_SYNC,
 #endif

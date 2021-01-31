@@ -6,12 +6,8 @@
 #include "brave/browser/extensions/api/settings_private/brave_prefs_util.h"
 
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_rewards/common/pref_names.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/brave_wayback_machine/buildflags.h"
-#include "brave/components/crypto_dot_com/browser/buildflags/buildflags.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
-#include "brave/components/ntp_background_images/common/pref_names.h"
 #include "brave/components/tor/buildflags/buildflags.h"
 #include "chrome/browser/extensions/api/settings_private/prefs_util.h"
 #include "chrome/common/extensions/api/settings_private.h"
@@ -24,16 +20,8 @@
 #include "brave/components/brave_wayback_machine/pref_names.h"
 #endif
 
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/components/brave_wallet/pref_names.h"
-#endif
-
 #if BUILDFLAG(IPFS_ENABLED)
 #include "brave/components/ipfs/pref_names.h"
-#endif
-
-#if BUILDFLAG(CRYPTO_DOT_COM_ENABLED)
-#include "brave/components/crypto_dot_com/common/pref_names.h"
 #endif
 
 #if BUILDFLAG(ENABLE_TOR)
@@ -41,11 +29,6 @@
 #endif
 
 namespace extensions {
-
-using ntp_background_images::prefs::kNewTabPageShowBackgroundImage;
-using ntp_background_images::prefs::
-    kNewTabPageShowSponsoredImagesBackgroundImage;
-using ntp_background_images::prefs::kNewTabPageSuperReferralThemesOption;
 
 namespace settings_api = api::settings_private;
 
@@ -93,40 +76,15 @@ const PrefsUtil::TypedPrefMap& BravePrefsUtil::GetAllowlistedKeys() {
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
   (*s_brave_allowlist)[kBraveSuggestedSiteSuggestionsEnabled] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[brave_rewards::prefs::kHideButton] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
   (*s_brave_allowlist)[kAskWidevineInstall] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageSuperReferralThemesOption] =
-      settings_api::PrefType::PREF_TYPE_NUMBER;
   // new tab prefs
-  (*s_brave_allowlist)[kNewTabPageShowSponsoredImagesBackgroundImage] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowBackgroundImage] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
   (*s_brave_allowlist)[kNewTabPageShowClock] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
   (*s_brave_allowlist)[kNewTabPageShowStats] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowRewards] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowToday] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowBinance] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowTogether] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  (*s_brave_allowlist)[kNewTabPageShowGemini] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
   (*s_brave_allowlist)[kNewTabPageShowsOptions] =
       settings_api::PrefType::PREF_TYPE_NUMBER;
-#if BUILDFLAG(CRYPTO_DOT_COM_ENABLED)
-  (*s_brave_allowlist)[kCryptoDotComNewTabPageShowCryptoDotCom] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-#endif
-  // Brave today prefs
-  (*s_brave_allowlist)[kBraveTodaySources] =
-      settings_api::PrefType::PREF_TYPE_DICTIONARY;
   // Clear browsing data on exit prefs.
   (*s_brave_allowlist)[browsing_data::prefs::kDeleteBrowsingHistoryOnExit] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
@@ -161,13 +119,6 @@ const PrefsUtil::TypedPrefMap& BravePrefsUtil::GetAllowlistedKeys() {
   // IPFS Companion pref
   (*s_brave_allowlist)[kIPFSCompanionEnabled] =
       settings_api::PrefType::PREF_TYPE_BOOLEAN;
-  // Brave Wallet pref
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  (*s_brave_allowlist)[kBraveWalletWeb3Provider] =
-      settings_api::PrefType::PREF_TYPE_NUMBER;
-  (*s_brave_allowlist)[kLoadCryptoWalletsOnStartup] =
-      settings_api::PrefType::PREF_TYPE_BOOLEAN;
-#endif
   // IPFS pref
 #if BUILDFLAG(IPFS_ENABLED)
   (*s_brave_allowlist)[kIPFSResolveMethod] =

@@ -16,7 +16,6 @@
 #include "components/content_settings/core/browser/host_content_settings_map.h"
 
 #if BUILDFLAG(ENABLE_EXTENSIONS)
-#include "brave/common/extensions/api/brave_today.h"
 #include "extensions/browser/event_router.h"
 #endif
 
@@ -67,16 +66,6 @@ void BraveBrowsingDataRemoverDelegate::RemoveEmbedderData(
 
 #if BUILDFLAG(ENABLE_EXTENSIONS)
   if (remove_mask & DATA_TYPE_HISTORY) {
-    auto* event_router = extensions::EventRouter::Get(profile_);
-    if (event_router) {
-      std::unique_ptr<base::ListValue> args(
-          extensions::api::brave_today::OnClearHistory::Create().release());
-      std::unique_ptr<extensions::Event> event(new extensions::Event(
-          extensions::events::BRAVE_START,
-          extensions::api::brave_today::OnClearHistory::kEventName,
-          std::move(args)));
-      event_router->BroadcastEvent(std::move(event));
-    }
   }
 #endif
 }

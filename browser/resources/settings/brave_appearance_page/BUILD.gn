@@ -14,7 +14,6 @@ js_type_check("closure_compile_module") {
   deps = [
     ":brave_appearance_browser_proxy",
     ":brave_theme",
-    ":super_referral",
     ":toolbar",
   ]
 }
@@ -49,22 +48,6 @@ js_library("brave_theme") {
   ]
 }
 
-js_library("super_referral") {
-  deps = [
-    "//chrome/browser/resources/settings:route",
-    "//chrome/browser/resources/settings:router.m",
-    "//ui/webui/resources/js:cr.m",
-    "//ui/webui/resources/js:i18n_behavior.m",
-    "//ui/webui/resources/js:load_time_data.m",
-  ]
-  externs_list = [
-    "$externs_path/settings_private.js",
-  ]
-  extra_deps = [
-    ":templatize"
-  ]
-}
-
 js_library("toolbar") {
   externs_list = [
     "$externs_path/settings_private.js",
@@ -84,7 +67,6 @@ group("web_modules") {
 html_to_js("templatize") {
   js_files = [
     "brave_theme.js",
-    "super_referral.js",
     "toolbar.js",
   ]
 }

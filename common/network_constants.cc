@@ -11,11 +11,6 @@ const char kBraveSoftwareProxyPattern[] = "https://*.bravesoftware.com/*";
 const char kBraveUsageStandardPath[] = "/1/usage/brave-core";
 const char kBraveUsageThresholdPath[] = "/1/usage/brave-core-threshold";
 
-const char kBraveReferralsServer[] = "laptop-updates.brave.com";
-const char kBraveReferralsHeadersPath[] = "/promo/custom-headers";
-const char kBraveReferralsInitPath[] = "/promo/initialize/nonua";
-const char kBraveReferralsActivityPath[] = "/promo/activity";
-
 const char kBraveSafeBrowsingFileCheckProxy[] = "sb-ssl.brave.com";
 const char kBraveRedirectorProxy[] = "redirector.brave.com";
 const char kBraveClients4Proxy[] = "clients4.brave.com";

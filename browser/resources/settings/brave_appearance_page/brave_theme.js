@@ -76,8 +76,4 @@ Polymer({
       this.$.braveThemeType.value = this.braveThemeType_;
     });
   },
-
-  useThemesSubPage_: function() {
-    return loadTimeData.getString('superReferralThemeName') !== "";
-  }
 });

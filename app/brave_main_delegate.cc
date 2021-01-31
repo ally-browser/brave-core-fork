@@ -18,7 +18,6 @@
 #include "brave/browser/brave_content_browser_client.h"
 #include "brave/common/brave_switches.h"
 #include "brave/common/resource_bundle_helper.h"
-#include "brave/components/brave_ads/browser/buildflags/buildflags.h"
 #include "brave/renderer/brave_content_renderer_client.h"
 #include "brave/utility/brave_content_utility_client.h"
 #include "build/build_config.h"
@@ -50,9 +49,7 @@
 #include "third_party/blink/public/common/features.h"
 #include "ui/base/ui_base_features.h"
 
-#if BUILDFLAG(BRAVE_ADS_ENABLED)
 #include "components/dom_distiller/core/dom_distiller_switches.h"
-#endif
 
 #if defined(OS_ANDROID)
 #include "base/android/jni_android.h"
@@ -157,9 +154,7 @@ void BraveMainDelegate::PreSandboxStartup() {
 
 bool BraveMainDelegate::BasicStartupComplete(int* exit_code) {
   BraveCommandLineHelper command_line(base::CommandLine::ForCurrentProcess());
-#if BUILDFLAG(BRAVE_ADS_ENABLED)
   command_line.AppendSwitch(switches::kEnableDomDistiller);
-#endif
   command_line.AppendSwitch(switches::kDisableDomainReliability);
   command_line.AppendSwitch(switches::kNoPings);
 

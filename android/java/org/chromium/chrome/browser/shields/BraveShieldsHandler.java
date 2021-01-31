@@ -53,8 +53,6 @@ import org.chromium.base.Log;
 import org.chromium.base.SysUtils;
 import org.chromium.base.task.AsyncTask;
 import org.chromium.chrome.R;
-import org.chromium.chrome.browser.BraveRewardsHelper;
-import org.chromium.chrome.browser.BraveRewardsNativeWorker;
 import org.chromium.chrome.browser.brave_stats.BraveStatsUtil;
 import org.chromium.chrome.browser.night_mode.GlobalNightModeStateProviderHolder;
 import org.chromium.chrome.browser.onboarding.OnboardingPrefManager;
@@ -72,7 +70,7 @@ import java.util.Map;
 /**
  * Object responsible for handling the creation, showing, hiding of the BraveShields menu.
  */
-public class BraveShieldsHandler implements BraveRewardsHelper.LargeIconReadyCallback {
+public class BraveShieldsHandler {
 
     private static class BlockersInfo {
         public BlockersInfo() {
@@ -118,9 +116,6 @@ public class BraveShieldsHandler implements BraveRewardsHelper.LargeIconReadyCal
     private TextView mSiteBrokenWarningText;
     private View mBottomDivider;
     private ImageView mToggleIcon;
-
-    private BraveRewardsNativeWorker mBraveRewardsNativeWorker;
-    private BraveRewardsHelper mIconFetcher;
 
     private String mHost;
     private String mTitle;
@@ -191,8 +186,6 @@ public class BraveShieldsHandler implements BraveRewardsHelper.LargeIconReadyCal
         mTabId = tab.getId();
         mProfile = Profile.fromWebContents(tab.getWebContents());
 
-        mBraveRewardsNativeWorker = BraveRewardsNativeWorker.getInstance();
-        mIconFetcher = new BraveRewardsHelper(tab);
         mPopupWindow = showPopupMenu(anchorView);
 
         updateValues(mTabId);
@@ -386,11 +379,8 @@ public class BraveShieldsHandler implements BraveRewardsHelper.LargeIconReadyCal
     }
 
     private void setUpMainLayout() {
-        String favIconURL = mBraveRewardsNativeWorker.GetPublisherFavIconURL(mTabId);
         Tab currentActiveTab = mIconFetcher.getTab();
         String url = currentActiveTab.getUrlString();
-        final String favicon_url = (favIconURL.isEmpty()) ? url : favIconURL;
-        mIconFetcher.retrieveLargeIcon(favicon_url, this);
 
         TextView mSiteText = mMainLayout.findViewById(R.id.site_text);
         mSiteText.setText(mTitle.replaceFirst("^(http[s]?://www\\.|http[s]?://|www\\.)", ""));
@@ -906,20 +896,6 @@ public class BraveShieldsHandler implements BraveRewardsHelper.LargeIconReadyCal
     @Override
     public void onLargeIconReady(Bitmap icon) {
         SetFavIcon(icon);
-    }
-
-
-    private void SetFavIcon(Bitmap bmp) {
-        if (bmp != null) {
-            ((Activity)mContext).runOnUiThread(
-            new Runnable() {
-                @Override
-                public void run() {
-                    ImageView iv = (ImageView) mPopupView.findViewById(R.id.site_favicon);
-                    if (iv != null) iv.setImageBitmap(BraveRewardsHelper.getCircularBitmap(bmp));
-                }
-            });
-        }
     }
 
     private View.OnClickListener mDoneClickListener = new View.OnClickListener() {

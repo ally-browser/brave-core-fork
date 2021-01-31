@@ -36,14 +36,6 @@ const char kUseAlternativeSearchEngineProvider[] =
 const char kAlternativeSearchEngineProviderInTor[] =
     "brave.alternate_private_search_engine_in_tor";
 const char kLocationBarIsWide[] = "brave.location_bar_is_wide";
-const char kReferralDownloadID[] = "brave.referral.download_id";
-const char kReferralTimestamp[] = "brave.referral.timestamp";
-const char kReferralAttemptTimestamp[] =
-    "brave.referral.referral_attempt_timestamp";
-const char kReferralAttemptCount[] = "brave.referral.referral_attempt_count";
-const char kReferralHeaders[] = "brave.referral.headers";
-const char kReferralAndroidFirstRunTimestamp[] =
-    "brave.referral_android_first_run_timestamp";
 const char kHTTPSEVerywhereControlType[] = "brave.https_everywhere_default";
 const char kNoScriptControlType[] = "brave.no_script_default";
 const char kShieldsAdvancedViewEnabled[] =
@@ -61,23 +53,8 @@ const char kIPFSCompanionEnabled[] = "brave.ipfs_companion_enabled";
 const char kNewTabPageShowClock[] = "brave.new_tab_page.show_clock";
 const char kNewTabPageClockFormat[] = "brave.new_tab_page.clock_format";
 const char kNewTabPageShowStats[] = "brave.new_tab_page.show_stats";
-const char kNewTabPageShowToday[] = "brave.new_tab_page.show_brave_today";
-const char kNewTabPageShowRewards[] = "brave.new_tab_page.show_rewards";
-const char kNewTabPageShowBinance[] = "brave.new_tab_page.show_binance";
-const char kNewTabPageShowGemini[] = "brave.new_tab_page.show_gemini";
-const char kNewTabPageShowTogether[] = "brave.new_tab_page.show_together";
 const char kNewTabPageShowsOptions[] = "brave.new_tab_page.shows_options";
-const char kBraveTodaySources[] = "brave.today.sources";
-const char kBraveTodayIntroDismissed[] = "brave.today.intro_dismissed";
-const char kBraveTodayWeeklySessionCount[] =
-    "brave.today.p3a_weekly_session_count";
-const char kBraveTodayWeeklyCardViewsCount[] =
-    "brave.today.p3a_weekly_card_views_count";
-const char kBraveTodayWeeklyCardVisitsCount[] =
-    "brave.today.p3a_weekly_card_visits_count";
 const char kBraveEnabledMediaRouter[] = "brave.enable_media_router";
-const char kBinanceAccessToken[] = "brave.binance.access_token";
-const char kBinanceRefreshToken[] = "brave.binance.refresh_token";
 const char kAlwaysShowBookmarkBarOnNTP[] =
     "brave.always_show_bookmark_bar_on_ntp";
 const char kAutocompleteEnabled[] = "brave.autocomplete_enabled";

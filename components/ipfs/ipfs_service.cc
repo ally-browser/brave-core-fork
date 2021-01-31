@@ -90,7 +90,6 @@ IpfsService::IpfsService(content::BrowserContext* context,
           {base::ThreadPool(), base::MayBlock(),
            base::TaskPriority::BEST_EFFORT,
            base::TaskShutdownBehavior::BLOCK_SHUTDOWN})),
-      ipfs_p3a(this, context),
       weak_factory_(this) {
   DCHECK(!user_data_dir.empty());
   url_loader_factory_ =

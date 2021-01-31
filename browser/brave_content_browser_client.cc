@@ -19,17 +19,13 @@
 #include "brave/browser/net/brave_proxying_web_socket.h"
 #include "brave/common/pref_names.h"
 #include "brave/common/webui_url_constants.h"
-#include "brave/components/binance/browser/buildflags/buildflags.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_shields/browser/brave_shields_util.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_shields/browser/tracking_protection_service.h"
 #include "brave/components/brave_shields/common/brave_shield_constants.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
 #include "brave/components/cosmetic_filters/browser/cosmetic_filters_resources.h"
 #include "brave/components/cosmetic_filters/common/cosmetic_filters.mojom.h"
-#include "brave/components/gemini/browser/buildflags/buildflags.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "brave/components/speedreader/buildflags.h"
 #include "brave/components/tor/buildflags/buildflags.h"
@@ -80,10 +76,6 @@ using extensions::ChromeContentBrowserClientExtensionsPart;
 #include "brave/components/ipfs/ipfs_navigation_throttle.h"
 #endif
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-#include "brave/components/brave_rewards/browser/rewards_protocol_handler.h"
-#endif
-
 #if BUILDFLAG(ENABLE_TOR)
 #include "brave/browser/tor/onion_location_navigation_throttle_delegate.h"
 #include "brave/browser/tor/tor_profile_service_factory.h"
@@ -95,20 +87,6 @@ using extensions::ChromeContentBrowserClientExtensionsPart;
 #include "brave/browser/speedreader/speedreader_tab_helper.h"
 #include "brave/components/speedreader/speedreader_throttle.h"
 #include "third_party/blink/public/mojom/loader/resource_load_info.mojom-shared.h"
-#endif
-
-#if BUILDFLAG(BINANCE_ENABLED)
-#include "brave/browser/binance/binance_protocol_handler.h"
-#endif
-
-#if BUILDFLAG(GEMINI_ENABLED)
-#include "brave/browser/gemini/gemini_protocol_handler.h"
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/browser/brave_wallet/brave_wallet_service_factory.h"
-#include "brave/components/brave_wallet/brave_wallet_constants.h"
-#include "brave/components/brave_wallet/brave_wallet_service.h"
 #endif
 
 #if !defined(OS_ANDROID)
@@ -218,32 +196,6 @@ bool BraveContentBrowserClient::HandleExternalProtocol(
     webtorrent::HandleMagnetProtocol(url, std::move(web_contents_getter),
                                      page_transition, has_user_gesture,
                                      initiating_origin);
-    return true;
-  }
-#endif
-
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  if (brave_rewards::IsRewardsProtocol(url)) {
-    brave_rewards::HandleRewardsProtocol(url, std::move(web_contents_getter),
-                                         page_transition, has_user_gesture);
-    return true;
-  }
-#endif
-
-#if BUILDFLAG(BINANCE_ENABLED)
-  if (binance::IsBinanceProtocol(url)) {
-    binance::HandleBinanceProtocol(url, std::move(web_contents_getter),
-                                   page_transition, has_user_gesture,
-                                   initiating_origin);
-    return true;
-  }
-#endif
-
-#if BUILDFLAG(GEMINI_ENABLED)
-  if (gemini::IsGeminiProtocol(url)) {
-    gemini::HandleGeminiProtocol(url, std::move(web_contents_getter),
-                                 page_transition, has_user_gesture,
-                                 initiating_origin);
     return true;
   }
 #endif
@@ -438,22 +390,6 @@ bool BraveContentBrowserClient::HandleURLOverrideRewrite(GURL* url,
     *url = GURL(chrome::kChromeUIWelcomeURL);
     return true;
   }
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  // If the Crypto Wallets extension is loaded, then it replaces the WebUI
-  Profile* profile = Profile::FromBrowserContext(browser_context);
-  auto* service = BraveWalletServiceFactory::GetForProfile(profile);
-  if (service->IsCryptoWalletsReady() &&
-      url->SchemeIs(content::kChromeUIScheme) &&
-      url->host() == ethereum_remote_client_host) {
-    auto* registry = extensions::ExtensionRegistry::Get(browser_context);
-    if (registry->ready_extensions().GetByID(
-        ethereum_remote_client_extension_id)) {
-      *url = GURL(ethereum_remote_client_base_url);
-      return true;
-    }
-  }
-#endif
 
   return false;
 }

@@ -1,8 +1,5 @@
 import(
     "//brave/components/brave_perf_predictor/browser/buildflags/buildflags.gni")
-import("//brave/components/brave_rewards/browser/buildflags/buildflags.gni")
-import("//brave/components/brave_wallet/buildflags/buildflags.gni")
-import("//brave/components/crypto_dot_com/browser/buildflags/buildflags.gni")
 import("//brave/components/ipfs/buildflags/buildflags.gni")
 import("//brave/components/speedreader/buildflags.gni")
 import("//brave/components/tor/buildflags/buildflags.gni")
@@ -25,13 +22,6 @@ grit("static_resources") {
   if (enable_extensions) {
     deps += [ "//brave/components/brave_extension/extension/brave_extension" ]
   }
-  if (brave_rewards_enabled) {
-    deps += [ "//brave/components/brave_rewards/resources" ]
-    if (enable_extensions) {
-      deps +=
-          [ "//brave/components/brave_rewards/resources/extension:resources" ]
-    }
-  }
   if (enable_tor) {
     deps += [ "//brave/components/tor/resources" ]
   }
@@ -40,7 +30,6 @@ grit("static_resources") {
     "enable_brave_perf_predictor=$enable_brave_perf_predictor",
     "enable_speedreader=$enable_speedreader",
     "ipfs_enabled=$ipfs_enabled",
-    "crypto_dot_com_enabled=$crypto_dot_com_enabled",
   ]
 
   grit_flags = [
@@ -60,7 +49,7 @@ repack("resources") {
     "//brave/components/brave_welcome_ui:generated_resources",
     "//brave/components/cosmetic_filters/resources/data:generated_resources",
     "//brave/components/webcompat_reporter/ui:generated_resources",
-  ]
+]
 
   sources = [
     "$root_gen_dir/brave/components/brave_adblock/resources/brave_adblock_generated.pak",
@@ -78,11 +67,6 @@ repack("resources") {
     ]
   }
 
-  if (brave_wallet_enabled) {
-    deps += [ "//brave/components/brave_wallet_ui:generated_resources" ]
-    sources += [ "$root_gen_dir/brave/components/brave_wallet/resources/brave_wallet_generated.pak" ]
-  }
-
   output = "$root_gen_dir/components/brave_components_resources.pak"
 }
 
@@ -94,7 +78,6 @@ grit("strings") {
   defines = [
     "enable_speedreader=$enable_speedreader",
     "ipfs_enabled=$ipfs_enabled",
-    "crypto_dot_com_enabled=$crypto_dot_com_enabled",
     "enable_tor=$enable_tor",
   ]
 

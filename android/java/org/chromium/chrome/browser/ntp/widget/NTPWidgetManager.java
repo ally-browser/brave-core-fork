@@ -13,7 +13,6 @@ import android.content.SharedPreferences;
 import org.chromium.base.ContextUtils;
 import org.chromium.chrome.R;
 import org.chromium.chrome.browser.ntp.widget.NTPWidgetItem;
-import org.chromium.chrome.browser.widget.crypto.binance.BinanceNativeWorker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import java.util.TreeMap;
 public class NTPWidgetManager {
     public static final String PREF_PRIVATE_STATS = "private_stats";
     public static final String PREF_FAVORITES = "favorites";
-    public static final String PREF_BINANCE = "binance";
     public static final String PREF_NTP_WIDGET_ORDER = "ntp_widget_order";
 
     private static NTPWidgetManager sInstance;
@@ -42,10 +40,6 @@ public class NTPWidgetManager {
                     new NTPWidgetItem(PREF_FAVORITES,
                             mContext.getResources().getString(R.string.favorites),
                             mContext.getResources().getString(R.string.favorites_text)));
-            put(PREF_BINANCE,
-                    new NTPWidgetItem(PREF_BINANCE,
-                            mContext.getResources().getString(R.string.binance),
-                            mContext.getResources().getString(R.string.binance_disconnect_text)));
         }
     };
 
@@ -66,10 +60,6 @@ public class NTPWidgetManager {
 
     public int getFavoritesWidget() {
         return mSharedPreferences.getInt(PREF_FAVORITES, 1);
-    }
-
-    public int getBinanceWidget() {
-        return mSharedPreferences.getInt(PREF_BINANCE, 2);
     }
 
     public void setWidget(String widgetType, int position) {
@@ -96,10 +86,6 @@ public class NTPWidgetManager {
         if (getFavoritesWidget() != -1) {
             usedWidgetMap.put(getFavoritesWidget(), PREF_FAVORITES);
         }
-        if (getBinanceWidget() != -1
-            && BinanceNativeWorker.getInstance().IsSupportedRegion()) {
-            usedWidgetMap.put(getBinanceWidget(), PREF_BINANCE);
-        }
         return new ArrayList<String>(usedWidgetMap.values());
     }
 
@@ -110,10 +96,6 @@ public class NTPWidgetManager {
         }
         if (getFavoritesWidget() == -1) {
             availableWidgets.add(PREF_FAVORITES);
-        }
-        if (getBinanceWidget() == -1
-            && BinanceNativeWorker.getInstance().IsSupportedRegion()) {
-            availableWidgets.add(PREF_BINANCE);
         }
         return availableWidgets;
     }

@@ -15,7 +15,6 @@
 #include "base/no_destructor.h"
 #include "brave/common/brave_constants.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/ntp_background_images/common/pref_names.h"
 #include "brave/components/search_engines/brave_prepopulated_engines.h"
 #include "brave/components/tor/buildflags/buildflags.h"
 #include "chrome/browser/browser_process.h"
@@ -23,9 +22,6 @@
 #include "chrome/browser/profiles/profile_key.h"
 #include "chrome/browser/profiles/profile_manager.h"
 #include "components/prefs/pref_service.h"
-
-using ntp_background_images::prefs::kNewTabPageShowBackgroundImage;
-using ntp_background_images::prefs::kNewTabPageShowSponsoredImagesBackgroundImage; // NOLINT
 
 #if BUILDFLAG(ENABLE_TOR)
 #include "brave/browser/tor/tor_profile_service_factory.h"
@@ -201,26 +197,6 @@ bool IsRegularProfile(content::BrowserContext* context) {
   return !context->IsTor() &&
          !profile->IsGuestSession() &&
          profile->IsRegularProfile();
-}
-
-void RecordSponsoredImagesEnabledP3A(Profile* profile) {
-  bool is_sponsored_image_enabled =
-      profile->GetPrefs()->GetBoolean(kNewTabPageShowBackgroundImage) &&
-      profile->GetPrefs()->GetBoolean(
-          kNewTabPageShowSponsoredImagesBackgroundImage);
-  UMA_HISTOGRAM_BOOLEAN("Brave.NTP.SponsoredImagesEnabled",
-                        is_sponsored_image_enabled);
-}
-
-void RecordInitialP3AValues(Profile* profile) {
-  // Preference is unregistered for some reason in profile_manager_unittest
-  // TODO(bsclifton): create a proper testing profile
-  if (!profile->GetPrefs()->FindPreference(kNewTabPageShowBackgroundImage) ||
-      !profile->GetPrefs()->FindPreference(
-          kNewTabPageShowSponsoredImagesBackgroundImage)) {
-    return;
-  }
-  RecordSponsoredImagesEnabledP3A(profile);
 }
 
 void SetDefaultSearchVersion(Profile* profile, bool is_new_profile) {

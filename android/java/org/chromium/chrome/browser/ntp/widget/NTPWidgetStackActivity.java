@@ -28,8 +28,6 @@ import org.chromium.chrome.browser.ntp.BraveNewTabPageLayout;
 import org.chromium.chrome.browser.ntp.widget.NTPWidgetAdapter;
 import org.chromium.chrome.browser.ntp.widget.NTPWidgetManager;
 import org.chromium.chrome.browser.ntp.widget.NTPWidgetStackAdapter;
-import org.chromium.chrome.browser.widget.crypto.binance.BinanceNativeWorker;
-import org.chromium.chrome.browser.widget.crypto.binance.BinanceWidgetManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,12 +149,6 @@ public class NTPWidgetStackActivity extends AppCompatActivity {
         for (int i = 0; i < availableNTPWidgetStackAdapter.getWidgetList().size(); i++) {
             NTPWidgetManager.getInstance().setWidget(
                     availableNTPWidgetStackAdapter.getWidgetList().get(i), -1);
-            if (availableNTPWidgetStackAdapter.getWidgetList().get(i).equals(
-                        NTPWidgetManager.PREF_BINANCE)) {
-                BinanceNativeWorker.getInstance().revokeToken();
-                BinanceWidgetManager.getInstance().setBinanceAccountBalance("");
-                BinanceWidgetManager.getInstance().setUserAuthenticationForBinance(false);
-            }
         }
         if (isFromSettings) {
             if (BraveActivity.getBraveActivity() != null && BraveActivity.getBraveActivity().getActivityTab() != null) {

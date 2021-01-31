@@ -112,33 +112,6 @@ public class BravePrefServiceBridge {
         return BravePrefServiceBridgeJni.get().getDataSaved(profile);
     }
 
-    /**
-     * @param whether SafetyNet check failed.
-     */
-    public void setSafetynetCheckFailed(boolean value) {
-        BravePrefServiceBridgeJni.get().setSafetynetCheckFailed(value);
-    }
-
-    public boolean getSafetynetCheckFailed() {
-        return BravePrefServiceBridgeJni.get().getSafetynetCheckFailed();
-    }
-
-    public void setSafetynetStatus(String status) {
-        BravePrefServiceBridgeJni.get().setSafetynetStatus(status);
-    }
-
-    public void setUseRewardsStagingServer(boolean enabled) {
-        BravePrefServiceBridgeJni.get().setUseRewardsStagingServer(enabled);
-    }
-
-    public void resetPromotionLastFetchStamp() {
-        BravePrefServiceBridgeJni.get().resetPromotionLastFetchStamp();
-    }
-
-    public boolean getUseRewardsStagingServer() {
-        return BravePrefServiceBridgeJni.get().getUseRewardsStagingServer();
-    }
-
     public void setOldTrackersBlockedCount(Profile profile, long count) {
         BravePrefServiceBridgeJni.get().setOldTrackersBlockedCount(profile, count);
     }
@@ -153,46 +126,6 @@ public class BravePrefServiceBridge {
 
     public boolean GetBooleanForContentSetting(int content_type) {
         return BravePrefServiceBridgeJni.get().getBooleanForContentSetting(content_type);
-    }
-
-    public void setReferralAndroidFirstRunTimestamp(long time) {
-        BravePrefServiceBridgeJni.get().setReferralAndroidFirstRunTimestamp(time);
-    }
-
-    public void setReferralCheckedForPromoCodeFile(boolean value) {
-        BravePrefServiceBridgeJni.get().setReferralCheckedForPromoCodeFile(value);
-    }
-
-    public void setReferralInitialization(boolean value) {
-        BravePrefServiceBridgeJni.get().setReferralInitialization(value);
-    }
-
-    public void setReferralPromoCode(String promoCode) {
-        BravePrefServiceBridgeJni.get().setReferralPromoCode(promoCode);
-    }
-
-    public void setReferralDownloadId(String downloadId) {
-        BravePrefServiceBridgeJni.get().setReferralDownloadId(downloadId);
-    }
-
-    public void setP3AEnabled(boolean value) {
-        BravePrefServiceBridgeJni.get().setP3AEnabled(value);
-    }
-
-    public boolean getP3AEnabled() {
-        return BravePrefServiceBridgeJni.get().getP3AEnabled();
-    }
-
-    public boolean hasPathP3AEnabled() {
-        return BravePrefServiceBridgeJni.get().hasPathP3AEnabled();
-    }
-
-    public void setP3ANoticeAcknowledged(boolean value) {
-        BravePrefServiceBridgeJni.get().setP3ANoticeAcknowledged(value);
-    }
-
-    public boolean getP3ANoticeAcknowledged() {
-        return BravePrefServiceBridgeJni.get().getP3ANoticeAcknowledged();
     }
 
     @NativeMethods
@@ -225,26 +158,6 @@ public class BravePrefServiceBridge {
         void setOldAdsBlockedCount(Profile profile, long count);
         void setOldHttpsUpgradesCount(Profile profile, long count);
 
-        void setSafetynetCheckFailed(boolean value);
-        boolean getSafetynetCheckFailed();
-
-        void setSafetynetStatus(String status);
-
-        void setUseRewardsStagingServer(boolean enabled);
-        void resetPromotionLastFetchStamp();
-        boolean getUseRewardsStagingServer();
         boolean getBooleanForContentSetting(int content_type);
-
-        void setReferralAndroidFirstRunTimestamp(long time);
-        void setReferralCheckedForPromoCodeFile(boolean value);
-        void setReferralInitialization(boolean value);
-        void setReferralPromoCode(String promoCode);
-        void setReferralDownloadId(String downloadId);
-
-        void setP3AEnabled(boolean value);
-        boolean getP3AEnabled();
-        boolean hasPathP3AEnabled();
-        void setP3ANoticeAcknowledged(boolean value);
-        boolean getP3ANoticeAcknowledged();
     }
 }

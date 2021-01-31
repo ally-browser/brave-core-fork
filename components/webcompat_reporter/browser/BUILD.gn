@@ -21,8 +21,6 @@ source_set("browser") {
   deps = [
     "//base",
     "//brave/common",
-    "//brave/components/brave_referrals/browser",
-    "//brave/components/brave_stats/browser",
     "//content/public/browser",
     "//net",
     "//services/network/public/cpp",

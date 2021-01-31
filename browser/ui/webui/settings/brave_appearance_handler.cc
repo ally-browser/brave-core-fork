@@ -12,7 +12,6 @@
 #include "brave/browser/profiles/profile_util.h"
 #include "brave/browser/themes/brave_dark_mode_utils.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/ntp_background_images/common/pref_names.h"
 #include "chrome/browser/browser_process.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/search/instant_service.h"
@@ -100,7 +99,6 @@ void BraveAppearanceHandler::OnBraveDarkModeChanged() {
 
 void BraveAppearanceHandler::OnBackgroundPreferenceChanged(
     const std::string& pref_name) {
-  brave::RecordSponsoredImagesEnabledP3A(profile_);
 }
 
 void BraveAppearanceHandler::OnPreferenceChanged(const std::string& pref_name) {

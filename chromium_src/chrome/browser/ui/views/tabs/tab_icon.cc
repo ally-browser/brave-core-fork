@@ -22,8 +22,7 @@ namespace {
 // original Chromium implementation for all other URLs.
 bool BraveShouldThemifyFaviconForUrl(const GURL& url) {
   if (url.SchemeIs(content::kChromeUIScheme) &&
-      (url.host_piece() == kWelcomeHost ||
-       url.host_piece() == kRewardsPageHost))
+      (url.host_piece() == kWelcomeHost))
     return false;
 
   return ShouldThemifyFaviconForUrl_ChromiumImpl(url);

@@ -9,17 +9,12 @@
 
 #include "base/bind.h"
 #include "base/command_line.h"
-#include "bat/ads/pref_names.h"
 #include "brave/browser/brave_browser_process_impl.h"
 #include "brave/browser/component_updater/brave_component_installer.h"
 #include "brave/common/brave_switches.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_ads/common/pref_names.h"
 #include "brave/components/brave_component_updater/browser/brave_on_demand_updater.h"
 #include "brave/components/brave_extension/grit/brave_extension.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
-#include "brave/components/brave_rewards/common/pref_names.h"
-#include "brave/components/brave_rewards/resources/extension/grit/brave_rewards_extension_resources.h"
 #include "brave/components/brave_webtorrent/grit/brave_webtorrent_resources.h"
 #include "chrome/browser/extensions/extension_service.h"
 #include "chrome/browser/profiles/profile.h"
@@ -32,12 +27,6 @@
 #include "extensions/browser/extension_system.h"
 #include "extensions/common/constants.h"
 
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/browser/extensions/brave_wallet_util.h"
-#include "brave/components/brave_wallet/brave_wallet_constants.h"
-#include "brave/components/brave_wallet/pref_names.h"
-#endif
-
 namespace extensions {
 
 BraveComponentLoader::BraveComponentLoader(ExtensionSystem* extension_system,
@@ -45,13 +34,6 @@ BraveComponentLoader::BraveComponentLoader(ExtensionSystem* extension_system,
     : ComponentLoader(extension_system, profile),
       profile_(profile),
       profile_prefs_(profile->GetPrefs()) {
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  pref_change_registrar_.Init(profile_prefs_);
-  pref_change_registrar_.Add(
-      brave_rewards::prefs::kAutoContributeEnabled,
-      base::Bind(&BraveComponentLoader::CheckRewardsStatus,
-                 base::Unretained(this)));
-#endif
 }
 
 BraveComponentLoader::~BraveComponentLoader() {}
@@ -69,11 +51,6 @@ void BraveComponentLoader::OnComponentReady(std::string extension_id,
   if (allow_file_access) {
     ExtensionPrefs::Get(profile_)->SetAllowFileAccess(extension_id, true);
   }
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  if (extension_id == ethereum_remote_client_extension_id) {
-    ReinstallAsNonComponent(ethereum_remote_client_extension_id);
-  }
-#endif
 }
 
 void BraveComponentLoader::ReinstallAsNonComponent(
@@ -128,52 +105,8 @@ void BraveComponentLoader::AddDefaultComponentExtensions(
         brave_extension_path.Append(FILE_PATH_LITERAL("brave_extension"));
     Add(IDR_BRAVE_EXTENSION, brave_extension_path);
   }
-
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  // Enable rewards extension if already opted-in
-  CheckRewardsStatus();
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  // Only load if the eagerly load Crypto Wallets setting is on and there is a
-  // project id configured in the build.
-  if (HasInfuraProjectID() &&
-      profile_prefs_->GetBoolean(kLoadCryptoWalletsOnStartup)) {
-    AddEthereumRemoteClientExtension();
-  }
-#endif
 }
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-void BraveComponentLoader::AddRewardsExtension() {
-  const base::CommandLine& command_line =
-      *base::CommandLine::ForCurrentProcess();
-  if (!command_line.HasSwitch(switches::kDisableBraveRewardsExtension) &&
-      !Exists(brave_rewards_extension_id)) {
-    base::FilePath brave_rewards_path(FILE_PATH_LITERAL(""));
-    brave_rewards_path =
-        brave_rewards_path.Append(FILE_PATH_LITERAL("brave_rewards"));
-    Add(IDR_BRAVE_REWARDS, brave_rewards_path);
-  }
-}
-
-void BraveComponentLoader::CheckRewardsStatus() {
-  const bool is_ac_enabled =
-      profile_prefs_->GetBoolean(brave_rewards::prefs::kAutoContributeEnabled);
-
-  if (is_ac_enabled) {
-    AddRewardsExtension();
-  }
-}
-#endif
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-void BraveComponentLoader::AddEthereumRemoteClientExtension() {
-  AddExtension(ethereum_remote_client_extension_id,
-               ethereum_remote_client_extension_name,
-               ethereum_remote_client_extension_public_key);
-}
-#endif
 
 void BraveComponentLoader::AddWebTorrentExtension() {
   const base::CommandLine& command_line =

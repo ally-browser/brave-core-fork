@@ -90,10 +90,6 @@ const Config = function () {
   this.googleDefaultClientId = getNPMConfig(['google_default_client_id']) || ''
   this.googleDefaultClientSecret = getNPMConfig(['google_default_client_secret']) || ''
   this.braveServicesKey = getNPMConfig(['brave_services_key']) || ''
-  this.infuraProjectId = getNPMConfig(['brave_infura_project_id']) || ''
-  this.binanceClientId = getNPMConfig(['binance_client_id']) || ''
-  this.geminiClientId = getNPMConfig(['gemini_client_id']) || ''
-  this.geminiClientSecret = getNPMConfig(['gemini_client_secret']) || ''
   this.braveSyncEndpoint = getNPMConfig(['brave_sync_endpoint']) || ''
   this.safeBrowsingApiEndpoint = getNPMConfig(['safebrowsing_api_endpoint']) || ''
   this.updaterProdEndpoint = getNPMConfig(['updater_prod_endpoint']) || ''
@@ -115,8 +111,6 @@ const Config = function () {
   this.channel = 'development'
   this.git_cache_path = getNPMConfig(['git_cache_path'])
   this.sccache = getNPMConfig(['sccache'])
-  this.braveStatsApiKey = getNPMConfig(['brave_stats_api_key']) || ''
-  this.braveStatsUpdaterUrl = getNPMConfig(['brave_stats_updater_url']) || ''
   this.ignore_compile_failure = false
   this.enable_hangout_services_extension = true
   this.sign_widevine_cert = process.env.SIGN_WIDEVINE_CERT || ''
@@ -125,8 +119,7 @@ const Config = function () {
   this.signature_generator = path.join(this.srcDir, 'third_party', 'widevine', 'scripts', 'signature_generator.py') || ''
   this.extraGnArgs = {}
   this.extraNinjaOpts = []
-  this.braveSafetyNetApiKey = getNPMConfig(['brave_safetynet_api_key']) || ''
-  this.braveAndroidDeveloperOptionsCode = getNPMConfig(['brave_android_developer_options_code']) || ''
+    this.braveAndroidDeveloperOptionsCode = getNPMConfig(['brave_android_developer_options_code']) || ''
   this.braveAndroidKeystorePath = getNPMConfig(['brave_android_keystore_path'])
   this.braveAndroidKeystoreName = getNPMConfig(['brave_android_keystore_name'])
   this.braveAndroidKeystorePassword = getNPMConfig(['brave_android_keystore_password'])
@@ -206,10 +199,6 @@ Config.prototype.buildArgs = function () {
     brave_google_api_endpoint: this.googleApiEndpoint,
     google_default_client_id: this.googleDefaultClientId,
     google_default_client_secret: this.googleDefaultClientSecret,
-    brave_infura_project_id: this.infuraProjectId,
-    binance_client_id: this.binanceClientId,
-    gemini_client_id: this.geminiClientId,
-    gemini_client_secret: this.geminiClientSecret,
     brave_product_name: getNPMConfig(['brave_product_name']) || "brave-core",
     brave_project_name: getNPMConfig(['brave_project_name']) || "brave-core",
     brave_version_major: version_parts[0],
@@ -223,8 +212,6 @@ Config.prototype.buildArgs = function () {
     updater_prod_endpoint: this.updaterProdEndpoint,
     updater_dev_endpoint: this.updaterDevEndpoint,
     webcompat_report_api_endpoint: this.webcompatReportApiEndpoint,
-    brave_stats_api_key: this.braveStatsApiKey,
-    brave_stats_updater_url: this.braveStatsUpdaterUrl,
     enable_hangout_services_extension: this.enable_hangout_services_extension,
     enable_cdm_host_verification: this.enableCDMHostVerification(),
     skip_signing: !this.shouldSign(),
@@ -314,7 +301,6 @@ Config.prototype.buildArgs = function () {
     args.android_override_version_name = this.androidOverrideVersionName
 
     args.brave_android_developer_options_code = this.braveAndroidDeveloperOptionsCode
-    args.brave_safetynet_api_key = this.braveSafetyNetApiKey
     args.enable_widevine = false
     args.safe_browsing_mode = 2
 
@@ -338,13 +324,6 @@ Config.prototype.buildArgs = function () {
     // TODO - recheck
     delete args.enable_nacl
     delete args.enable_hangout_services_extension
-    delete args.brave_infura_project_id
-    // Ideally we'd not pass this on Linux CI and then
-    // not have a default value for this. But we'll
-    // eventually want it on Android, so keeping CI
-    // unchanged and deleting here for now.
-    delete args.gemini_client_id
-    delete args.gemini_client_secret
   }
 
   if (this.targetOS === 'ios') {
@@ -383,12 +362,6 @@ Config.prototype.buildArgs = function () {
     delete args.enable_hangout_services_extension
     delete args.brave_google_api_endpoint
     delete args.brave_google_api_key
-    delete args.brave_stats_api_key
-    delete args.brave_stats_updater_url
-    delete args.brave_infura_project_id
-    delete args.binance_client_id
-    delete args.gemini_client_id
-    delete args.gemini_client_secret
     delete args.webcompat_report_api_endpoint
     delete args.use_blink_v8_binding_new_idl_interface
     delete args.v8_enable_verify_heap
@@ -519,28 +492,8 @@ Config.prototype.update = function (options) {
     this.braveGoogleApiKey = options.brave_google_api_key
   }
 
-  if (options.brave_safetynet_api_key) {
-    this.braveSafetyNetApiKey = options.brave_safetynet_api_key;
-  }
-
   if (options.brave_google_api_endpoint) {
     this.googleApiEndpoint = options.brave_google_api_endpoint
-  }
-
-  if (options.brave_infura_project_id) {
-    this.infuraProjectId = options.infura_project_id
-  }
-
-  if (options.binance_client_id) {
-    this.binanceClientId = options.binance_client_id
-  }
-
-  if (options.gemini_client_id) {
-    this.geminiClientId = options.gemini_client_id
-  }
-
-  if (options.gemini_client_secret) {
-    this.geminiClientSecret = options.gemini_client_secret
   }
 
   if (options.safebrowsing_api_endpoint) {
@@ -557,14 +510,6 @@ Config.prototype.update = function (options) {
 
   if (options.webcompat_report_api_endpoint) {
     this.webcompatReportApiEndpoint = options.webcompat_report_api_endpoint
-  }
-
-  if (options.brave_stats_api_key) {
-    this.braveStatsApiKey = options.brave_stats_api_key
-  }
-
-  if (options.brave_stats_updater_url) {
-    this.braveStatsUpdaterUrl = options.brave_stats_updater_url
   }
 
   if (options.channel) {

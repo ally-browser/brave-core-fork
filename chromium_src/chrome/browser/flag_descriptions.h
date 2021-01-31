@@ -11,10 +11,6 @@
 namespace flag_descriptions {
 extern const char kUseDevUpdaterUrlName[];
 extern const char kUseDevUpdaterUrlDescription[];
-extern const char kBraveNTPBrandedWallpaperName[];
-extern const char kBraveNTPBrandedWallpaperDescription[];
-extern const char kBraveNTPBrandedWallpaperDemoName[];
-extern const char kBraveNTPBrandedWallpaperDemoDescription[];
 extern const char kBraveAdblockCosmeticFilteringName[];
 extern const char kBraveAdblockCosmeticFilteringDescription[];
 extern const char kBraveSpeedreaderName[];
@@ -23,8 +19,6 @@ extern const char kBraveSyncName[];
 extern const char kBraveSyncDescription[];
 extern const char kBraveIpfsName[];
 extern const char kBraveIpfsDescription[];
-extern const char kBraveSuperReferralName[];
-extern const char kBraveSuperReferralDescription[];
 extern const char kBraveEphemeralStorageName[];
 extern const char kBraveEphemeralStorageDescription[];
 }  // namespace flag_descriptions

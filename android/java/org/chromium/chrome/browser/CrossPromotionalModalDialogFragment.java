@@ -28,7 +28,6 @@ import org.chromium.chrome.R;
 
 import org.chromium.ui.base.DeviceFormFactor;
 import org.chromium.chrome.browser.util.ConfigurationUtils;
-import org.chromium.chrome.browser.BraveRewardsHelper;
 
 public class CrossPromotionalModalDialogFragment extends DialogFragment implements View.OnClickListener {
 

@@ -32,11 +32,6 @@ struct BraveRequestInfo;
 using ResponseCallback = base::Callback<void()>;
 }  // namespace brave
 
-namespace brave_rewards {
-int OnBeforeURLRequest(const brave::ResponseCallback& next_callback,
-                       std::shared_ptr<brave::BraveRequestInfo> ctx);
-}  // namespace brave_rewards
-
 namespace brave {
 
 enum BraveNetworkDelegateEventType {
@@ -95,8 +90,7 @@ struct BraveRequestInfo {
 
   GURL* allowed_unsafe_redirect_url = nullptr;
   BraveNetworkDelegateEventType event_type = kUnknownEventType;
-  const base::ListValue* referral_headers_list = nullptr;
-  BlockedBy blocked_by = kNotBlocked;
+    BlockedBy blocked_by = kNotBlocked;
   std::string mock_data_url;
   GURL ipfs_gateway_url;
   bool ipfs_auto_fallback = false;

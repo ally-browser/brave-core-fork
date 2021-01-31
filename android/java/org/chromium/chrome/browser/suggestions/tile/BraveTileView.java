@@ -11,7 +11,6 @@ import android.util.AttributeSet;
 import android.widget.TextView;
 
 import org.chromium.chrome.R;
-import org.chromium.chrome.browser.BraveRewardsHelper;
 import org.chromium.chrome.browser.ChromeTabbedActivity;
 import org.chromium.chrome.browser.ntp.widget.NTPWidgetManager;
 import org.chromium.chrome.browser.ntp_background_images.util.NTPUtil;

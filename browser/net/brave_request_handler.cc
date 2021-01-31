@@ -19,8 +19,6 @@
 #include "brave/browser/net/global_privacy_control_network_delegate_helper.h"
 #include "brave/browser/translate/buildflags/buildflags.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/brave_referrals/buildflags/buildflags.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
 #include "brave/components/brave_webtorrent/browser/buildflags/buildflags.h"
 #include "brave/components/ipfs/buildflags/buildflags.h"
 #include "chrome/browser/browser_process.h"
@@ -31,14 +29,6 @@
 #include "content/public/common/url_constants.h"
 #include "extensions/common/constants.h"
 #include "net/base/net_errors.h"
-
-#if BUILDFLAG(ENABLE_BRAVE_REFERRALS)
-#include "brave/browser/net/brave_referrals_network_delegate_helper.h"
-#endif
-
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-#include "brave/components/brave_rewards/browser/net/network_delegate_helper.h"
-#endif
 
 #if BUILDFLAG(ENABLE_BRAVE_WEBTORRENT)
 #include "brave/browser/net/brave_torrent_redirect_network_delegate_helper.h"
@@ -82,11 +72,6 @@ void BraveRequestHandler::SetupCallbacks() {
   callback = base::Bind(brave::OnBeforeURLRequest_CommonStaticRedirectWork);
   before_url_request_callbacks_.push_back(callback);
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  callback = base::Bind(brave_rewards::OnBeforeURLRequest);
-  before_url_request_callbacks_.push_back(callback);
-#endif
-
 #if BUILDFLAG(ENABLE_BRAVE_TRANSLATE_GO)
   callback =
       base::BindRepeating(brave::OnBeforeURLRequest_TranslateRedirectWork);
@@ -111,12 +96,6 @@ void BraveRequestHandler::SetupCallbacks() {
       base::Bind(brave::OnBeforeStartTransaction_GlobalPrivacyControlWork);
   before_start_transaction_callbacks_.push_back(start_transaction_callback);
 
-#if BUILDFLAG(ENABLE_BRAVE_REFERRALS)
-  start_transaction_callback =
-      base::Bind(brave::OnBeforeStartTransaction_ReferralsWork);
-  before_start_transaction_callbacks_.push_back(start_transaction_callback);
-#endif
-
 #if BUILDFLAG(ENABLE_BRAVE_WEBTORRENT)
   brave::OnHeadersReceivedCallback headers_received_callback =
       base::Bind(webtorrent::OnHeadersReceived_TorrentRedirectWork);
@@ -126,25 +105,6 @@ void BraveRequestHandler::SetupCallbacks() {
 
 void BraveRequestHandler::InitPrefChangeRegistrar() {
   DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
-#if BUILDFLAG(ENABLE_BRAVE_REFERRALS)
-  PrefService* prefs = g_browser_process->local_state();
-  pref_change_registrar_.reset(new PrefChangeRegistrar());
-  pref_change_registrar_->Init(prefs);
-  pref_change_registrar_->Add(
-      kReferralHeaders,
-      base::Bind(&BraveRequestHandler::OnReferralHeadersChanged,
-                 base::Unretained(this)));
-  // Retrieve current referral headers, if any.
-  OnReferralHeadersChanged();
-#endif
-}
-
-void BraveRequestHandler::OnReferralHeadersChanged() {
-  DCHECK_CURRENTLY_ON(content::BrowserThread::UI);
-  if (const base::ListValue* referral_headers =
-          g_browser_process->local_state()->GetList(kReferralHeaders)) {
-    referral_headers_list_.reset(referral_headers->DeepCopy());
-  }
 }
 
 bool BraveRequestHandler::IsRequestIdentifierValid(
@@ -176,7 +136,6 @@ int BraveRequestHandler::OnBeforeStartTransaction(
   }
   ctx->event_type = brave::kOnBeforeStartTransaction;
   ctx->headers = headers;
-  ctx->referral_headers_list = referral_headers_list_.get();
   callbacks_[ctx->request_identifier] = std::move(callback);
   RunNextCallback(ctx);
   return net::ERR_IO_PENDING;

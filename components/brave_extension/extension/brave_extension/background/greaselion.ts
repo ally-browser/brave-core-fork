@@ -27,25 +27,6 @@ interface RegisterOnSendHeadersWebRequest {
   extra?: string[]
 }
 
-interface SavePublisherVisit {
-  url: string
-  publisherKey: string
-  publisherName: string
-  mediaKey?: string
-  favIconUrl?: string
-}
-
-interface TipUser {
-  url: string
-  publisherKey: string
-  publisherName: string
-  publisherScreenName: string
-  favIconUrl: string
-  postId: string
-  postTimestamp: string
-  postText: string
-}
-
 interface ConnectionState {
   port: chrome.runtime.Port
   onCompletedWebRequestListener?: (
@@ -63,14 +44,6 @@ interface ConnectionState {
 
 // Maps Greaselion connection state by tabId:senderId
 const connectionsByTabIdSenderId = new Map<string, ConnectionState>()
-
-// Maps publisher keys by media key
-const publisherKeysByMediaKey = new Map<string, string>()
-
-// Maps publisher keys by tabId
-const publisherKeysByTabId = new Map<number, string>()
-
-const braveRewardsExtensionId = 'jidkidbbcafjabdphckchenhfomhnfma'
 
 const buildTabIdSenderIdKey = (tabId: number, senderId: string) => {
   if (!tabId || !senderId) {
@@ -99,16 +72,6 @@ const handleOnAPIRequest = (data: OnAPIRequest, onSuccess: (response: any) => vo
     })
     .then(responseData => onSuccess(responseData))
     .catch(error => onFailure(error))
-}
-
-const handleMediaDurationMetadata = (tabId: number, mediaType: string, data: MediaDurationMetadata) => {
-  const publisherKey = publisherKeysByMediaKey.get(data.mediaKey)
-  if (!publisherKey) {
-    console.error(`Failed to handle media duration metadata: missing publisher key for media key ${data.mediaKey}`)
-    return
-  }
-
-  chrome.braveRewards.updateMediaDuration(tabId, publisherKey, data.duration, data.firstVisit)
 }
 
 const onCompletedWebRequest = (
@@ -232,97 +195,6 @@ const handleRegisterOnUpdatedTab = (registrationKey: string, mediaType: string) 
   connectionState.onUpdatedTabListener = listener
 }
 
-const getPublisherPanelInfo = (tabId: number, publisherKey: string) => {
-  chrome.braveRewards.getPublisherPanelInfo(
-    publisherKey, (result: RewardsExtension.Result, info?: RewardsExtension.Publisher) => {
-      if (result === 0 && info) {
-        chrome.runtime.sendMessage(
-          braveRewardsExtensionId,
-          {
-            type: 'OnPublisherData',
-            tabId,
-            info
-          })
-      }
-      return
-    })
-}
-
-const getPublisherPanelInfoByTabId = (tabId: number) => {
-  if (!tabId) {
-    return
-  }
-
-  const publisherKey = publisherKeysByTabId.get(tabId)
-  if (!publisherKey) {
-    return
-  }
-
-  getPublisherPanelInfo(tabId, publisherKey)
-}
-
-const savePublisherInfo = (tabId: number, mediaType: string, url: string, publisherKey: string, publisherName: string, favIconUrl: string) => {
-  chrome.braveRewards.savePublisherInfo(
-    tabId,
-    mediaType,
-    url,
-    publisherKey,
-    publisherName,
-    favIconUrl,
-    (result: RewardsExtension.Result) => {
-      if (result !== 0) {
-        console.error(`Failed to save publisher info for ${publisherKey}, result is ${result}`)
-        return
-      }
-    })
-}
-
-const handleSavePublisherVisit = (tabId: number, mediaType: string, data: SavePublisherVisit) => {
-  if (!data.publisherKey || !data.publisherName) {
-    console.error('Invalid parameter')
-    return
-  }
-
-  publisherKeysByTabId.set(tabId, data.publisherKey)
-
-  if (data.mediaKey && !publisherKeysByMediaKey.has(data.mediaKey)) {
-    publisherKeysByMediaKey.set(data.mediaKey, data.publisherKey)
-  }
-
-  chrome.braveRewards.getPublisherInfo(
-    data.publisherKey, (result: RewardsExtension.Result, info?: RewardsExtension.Publisher) => {
-      if (result === 0 && info) {
-        getPublisherPanelInfo(tabId, data.publisherKey)
-        return
-      }
-
-      // Failed to find publisher info corresponding to this key, so save it now
-      if (result === 9) {
-        savePublisherInfo(
-          tabId,
-          mediaType,
-          data.url,
-          data.publisherKey,
-          data.publisherName,
-          data.favIconUrl || '')
-        return
-      }
-    })
-}
-
-const handleTipUser = (tabId: number, mediaType: string, data: TipUser) => {
-  chrome.braveRewards.tipUser(
-    tabId,
-    mediaType,
-    data.url,
-    data.publisherKey,
-    data.publisherName,
-    data.publisherScreenName,
-    data.favIconUrl,
-    data.postId,
-    data.postTimestamp,
-    data.postText)
-}
 
 const onMessageListener = (msg: any, port: chrome.runtime.Port) => {
   if (!port || !port.sender || !port.sender.id || !port.sender.tab || !msg) {
@@ -355,11 +227,6 @@ const onMessageListener = (msg: any, port: chrome.runtime.Port) => {
       case 'GreaselionError': {
         const data = msg.data as GreaselionError
         handleGreaselionError(tabId, msg.mediaType, data)
-        break
-      }
-      case 'MediaDurationMetadata': {
-        const data = msg.data as MediaDurationMetadata
-        handleMediaDurationMetadata(tabId, msg.mediaType, data)
         break
       }
       case 'OnAPIRequest': {
@@ -406,16 +273,6 @@ const onMessageListener = (msg: any, port: chrome.runtime.Port) => {
         handleRegisterOnUpdatedTab(key, msg.mediaType)
         break
       }
-      case 'SavePublisherVisit': {
-        const data = msg.data as SavePublisherVisit
-        handleSavePublisherVisit(tabId, msg.mediaType, data)
-        break
-      }
-      case 'TipUser': {
-        const data = msg.data as TipUser
-        handleTipUser(tabId, msg.mediaType, data)
-        break
-      }
     }
   })
 }
@@ -450,7 +307,6 @@ chrome.runtime.onConnectExternal.addListener((port: chrome.runtime.Port) => {
       }
 
       connectionsByTabIdSenderId.delete(key)
-      publisherKeysByTabId.delete(port.sender.tab.id)
 
       port.onMessage.removeListener(onMessageListener)
     }
@@ -463,13 +319,10 @@ chrome.runtime.onMessageExternal.addListener(
       return
     }
     chrome.greaselion.isGreaselionExtension(sender.id, (valid: boolean) => {
-      if (!valid && sender.id !== braveRewardsExtensionId) {
+      if (!valid) {
         return
       }
       switch (msg.type) {
-        case 'GetPublisherPanelInfo':
-          getPublisherPanelInfoByTabId(msg.tabId)
-          break
         case 'SupportsGreaselion':
           sendResponse({ supported: true })
           break

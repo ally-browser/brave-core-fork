@@ -12,7 +12,6 @@ namespace android {
 namespace {
 
 const base::Feature* kBraveFeaturesExposedToJava[] = {
-    &features::kBraveRewards,
     &blink::features::kForceWebContentsDarkMode,
 };
 

@@ -39,10 +39,6 @@
 #include "brave/components/tor/pref_names.h"
 #endif
 
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-#include "brave/components/brave_wallet/brave_wallet_constants.h"
-#endif
-
 #if BUILDFLAG(ENABLE_WIDEVINE)
 #include "brave/browser/widevine/widevine_utils.h"
 #endif
@@ -62,12 +58,6 @@ void BraveDefaultExtensionsHandler::RegisterMessages() {
       "setWebTorrentEnabled",
       base::BindRepeating(&BraveDefaultExtensionsHandler::SetWebTorrentEnabled,
                           base::Unretained(this)));
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  web_ui()->RegisterMessageCallback(
-      "setBraveWalletEnabled",
-      base::BindRepeating(&BraveDefaultExtensionsHandler::SetBraveWalletEnabled,
-                          base::Unretained(this)));
-#endif
   web_ui()->RegisterMessageCallback(
       "setHangoutsEnabled",
       base::BindRepeating(&BraveDefaultExtensionsHandler::SetHangoutsEnabled,
@@ -374,23 +364,3 @@ void BraveDefaultExtensionsHandler::SetIPFSCompanionEnabled(
         extensions::disable_reason::DisableReason::DISABLE_USER_ACTION);
   }
 }
-
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-void BraveDefaultExtensionsHandler::SetBraveWalletEnabled(
-    const base::ListValue* args) {
-  CHECK_EQ(args->GetSize(), 1U);
-  CHECK(profile_);
-  bool enabled;
-  args->GetBoolean(0, &enabled);
-
-  extensions::ExtensionService* service =
-      extensions::ExtensionSystem::Get(profile_)->extension_service();
-  if (enabled) {
-    service->EnableExtension(ethereum_remote_client_extension_id);
-  } else {
-    service->DisableExtension(
-        ethereum_remote_client_extension_id,
-        extensions::disable_reason::DisableReason::DISABLE_USER_ACTION);
-  }
-}
-#endif

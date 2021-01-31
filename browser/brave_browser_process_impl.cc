@@ -11,7 +11,6 @@
 #include "base/path_service.h"
 #include "base/task/post_task.h"
 #include "base/threading/sequenced_task_runner_handle.h"
-#include "brave/browser/brave_stats/brave_stats_updater.h"
 #include "brave/browser/component_updater/brave_component_updater_configurator.h"
 #include "brave/browser/component_updater/brave_component_updater_delegate.h"
 #include "brave/browser/net/brave_system_request_handler.h"
@@ -28,11 +27,6 @@
 #include "brave/components/brave_shields/browser/tracking_protection_service.h"
 #include "brave/components/brave_sync/buildflags/buildflags.h"
 #include "brave/components/brave_sync/network_time_helper.h"
-#include "brave/components/ntp_background_images/browser/features.h"
-#include "brave/components/ntp_background_images/browser/ntp_background_images_service.h"
-#include "brave/components/p3a/buildflags.h"
-#include "brave/components/p3a/brave_histogram_rewrite.h"
-#include "brave/components/p3a/brave_p3a_service.h"
 #include "brave/services/network/public/cpp/system_request_handler.h"
 #include "chrome/browser/component_updater/component_updater_utils.h"
 #include "chrome/browser/net/system_network_context_manager.h"
@@ -47,11 +41,6 @@
 #if BUILDFLAG(ENABLE_NATIVE_NOTIFICATIONS)
 #include "chrome/browser/notifications/notification_platform_bridge.h"
 #include "brave/browser/notifications/brave_notification_platform_bridge.h"
-#endif
-
-#if BUILDFLAG(ENABLE_BRAVE_REFERRALS)
-#include "brave/browser/brave_referrals/brave_referrals_service_factory.h"
-#include "brave/components/brave_referrals/browser/brave_referrals_service.h"
 #endif
 
 #if BUILDFLAG(ENABLE_EXTENSIONS)
@@ -84,13 +73,9 @@
 #include "chrome/browser/ui/browser_list.h"
 #endif
 
-#if BUILDFLAG(BRAVE_ADS_ENABLED)
 #include "brave/components/brave_user_model/browser/user_model_file_service.h"
-#endif
 
 using brave_component_updater::BraveComponent;
-using ntp_background_images::features::kBraveNTPBrandedWallpaper;
-using ntp_background_images::NTPBackgroundImagesService;
 
 namespace {
 
@@ -114,33 +99,6 @@ BraveBrowserProcessImpl::BraveBrowserProcessImpl(StartupData* startup_data)
     : BrowserProcessImpl(startup_data) {
   g_browser_process = this;
   g_brave_browser_process = this;
-
-#if BUILDFLAG(ENABLE_BRAVE_REFERRALS)
-  brave_referrals_service_ = brave::BraveReferralsServiceFactory::GetInstance()
-    ->GetForPrefs(local_state());
-  base::SequencedTaskRunnerHandle::Get()->PostDelayedTask(
-      FROM_HERE,
-      base::BindOnce(
-          [](brave::BraveReferralsService* referrals_service) {
-            referrals_service->Start();
-          },
-          base::Unretained(brave_referrals_service_.get())),
-      base::TimeDelta::FromSeconds(3));
-#endif
-
-  base::SequencedTaskRunnerHandle::Get()->PostTask(
-      FROM_HERE, base::BindOnce(
-                     [](brave_stats::BraveStatsUpdater* stats_updater) {
-                       stats_updater->Start();
-                     },
-                     base::Unretained(brave_stats_updater())));
-  // Disabled on mobile platforms, see for instance issues/6176
-#if BUILDFLAG(BRAVE_P3A_ENABLED)
-  // Create P3A Service early to catch more histograms. The full initialization
-  // should be started once browser process impl is ready.
-  brave_p3a_service();
-  brave::SetupHistogramsBraveization();
-#endif  // BUILDFLAG(BRAVE_P3A_ENABLED)
 }
 
 void BraveBrowserProcessImpl::Init() {
@@ -197,9 +155,7 @@ void BraveBrowserProcessImpl::StartBraveServices() {
 #if BUILDFLAG(ENABLE_SPEEDREADER)
   speedreader_rewriter_service();
 #endif
-#if BUILDFLAG(BRAVE_ADS_ENABLED)
   user_model_file_service();
-#endif
   // Now start the local data files service, which calls all observers.
   local_data_files_service()->Start();
 
@@ -226,21 +182,6 @@ BraveBrowserProcessImpl::ad_block_custom_filters_service() {
 brave_shields::AdBlockRegionalServiceManager*
 BraveBrowserProcessImpl::ad_block_regional_service_manager() {
   return ad_block_service()->regional_service_manager();
-}
-
-NTPBackgroundImagesService*
-BraveBrowserProcessImpl::ntp_background_images_service() {
-  if (!base::FeatureList::IsEnabled(kBraveNTPBrandedWallpaper))
-    return nullptr;
-
-  if (!ntp_background_images_service_) {
-    ntp_background_images_service_ =
-        std::make_unique<NTPBackgroundImagesService>(component_updater(),
-                                                     local_state());
-    ntp_background_images_service_->Init();
-  }
-
-  return ntp_background_images_service_.get();
 }
 
 #if BUILDFLAG(ENABLE_EXTENSIONS)
@@ -326,20 +267,6 @@ void BraveBrowserProcessImpl::OnTorEnabledChanged() {
 }
 #endif
 
-brave::BraveP3AService* BraveBrowserProcessImpl::brave_p3a_service() {
-  if (brave_p3a_service_) {
-    return brave_p3a_service_.get();
-  }
-  brave_p3a_service_ = new brave::BraveP3AService(local_state());
-  brave_p3a_service()->InitCallbacks();
-  return brave_p3a_service_.get();
-}
-
-brave_stats::BraveStatsUpdater* BraveBrowserProcessImpl::brave_stats_updater() {
-  if (!brave_stats_updater_)
-    brave_stats_updater_ = brave_stats::BraveStatsUpdaterFactory(local_state());
-  return brave_stats_updater_.get();
-}
 
 void BraveBrowserProcessImpl::CreateProfileManager() {
   DCHECK(!created_profile_manager_ && !profile_manager_);
@@ -387,7 +314,6 @@ BraveBrowserProcessImpl::speedreader_rewriter_service() {
 }
 #endif  // BUILDFLAG(ENABLE_SPEEDREADER)
 
-#if BUILDFLAG(BRAVE_ADS_ENABLED)
 brave_user_model::UserModelFileService*
 BraveBrowserProcessImpl::user_model_file_service() {
   if (!user_model_file_service_) {
@@ -397,8 +323,6 @@ BraveBrowserProcessImpl::user_model_file_service() {
   }
   return user_model_file_service_.get();
 }
-
-#endif  // BUILDFLAG(BRAVE_ADS_ENABLED)
 
 #if BUILDFLAG(IPFS_ENABLED)
 ipfs::BraveIpfsClientUpdater*

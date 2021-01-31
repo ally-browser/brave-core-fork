@@ -31,9 +31,6 @@
 bool BraveActionViewController::IsEnabled(
     content::WebContents* web_contents) const {
   bool is_enabled = ExtensionActionViewController::IsEnabled(web_contents);
-  if (is_enabled && extension_->id() == brave_rewards_extension_id &&
-      !brave::IsRegularProfile(browser_->profile()))
-    is_enabled = false;
   return is_enabled;
 }
 

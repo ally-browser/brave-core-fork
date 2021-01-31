@@ -16,16 +16,12 @@ import NewTabPage from '../containers/newTab'
 import { getActionsForDispatch } from '../api/getActions'
 import store from '../store'
 import { getNewTabData, getGridSitesData } from './default/data/storybookState'
-import getTodayState from './default/data/todayStorybookState'
 
 const doNothingDispatch: Dispatch = (action: any) => action
 
 function getActions () {
   return getActionsForDispatch(doNothingDispatch)
 }
-
-// TODO(petemill): privateCDN should be in /common/
-import { getUnpaddedAsDataUrl } from '../../brave_extension/extension/brave_extension/background/today/privateCDN'
 
 // @ts-ignore
 window.braveStorybookUnpadUrl = async function UnpadUrl (paddedUrl: string, mimeType = 'image/jpg'): Promise<string> {
@@ -61,10 +57,6 @@ function StoreProvider ({ story }: any) {
   )
 }
 
-function dismissBraveTodayIntroCard () {
-  console.log('brave today intro card dismissed')
-}
-
 storiesOf('New Tab/Containers', module)
   .addDecorator(withKnobs)
   .addDecorator(story => <div dir={boolean('rtl?', false) ? 'rtl' : ''}>{story()}</div>)
@@ -75,23 +67,13 @@ storiesOf('New Tab/Containers', module)
     const state = store.getState()
     const newTabData = getNewTabData(state.newTabData)
     const gridSitesData = getGridSitesData(state.gridSitesData)
-    const todayState = getTodayState()
     return (
       <NewTabPage
         newTabData={newTabData}
-        todayData={todayState}
         gridSitesData={gridSitesData}
         actions={getActions()}
         saveShowBackgroundImage={doNothing}
         saveShowStats={doNothing}
-        saveShowToday={doNothing}
-        saveShowRewards={doNothing}
-        saveShowBinance={doNothing}
-        saveShowTogether={doNothing}
-        saveShowGemini={doNothing}
-        saveShowCryptoDotCom={doNothing}
-        saveBrandedWallpaperOptIn={doNothing}
-        onReadBraveTodayIntroCard={dismissBraveTodayIntroCard}
         saveSetAllStackWidgets={doNothing}
       />
     )

@@ -127,10 +127,6 @@ public class RetentionNotificationUtil {
             return String.format(context.getResources().getString(R.string.notification_weekly_stats), adsTrackersCountWeekly);
         case DAY_6:
             return context.getResources().getString(R.string.notification_marketing);
-        case DAY_10:
-        case DAY_30:
-        case DAY_35:
-            return context.getResources().getString(R.string.notification_rewards);
         case BRAVE_STATS_ADS_TRACKERS:
             return context.getResources().getString(R.string.notification_brave_stats_trackers);
         case BRAVE_STATS_DATA:

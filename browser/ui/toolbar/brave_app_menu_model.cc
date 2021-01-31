@@ -63,19 +63,6 @@ void BraveAppMenuModel::InsertBraveMenuItems() {
                              IDS_SHOW_EXTENSIONS);
   }
 
-  if (IsCommandIdEnabled(IDC_SHOW_BRAVE_REWARDS)) {
-    InsertItemWithStringIdAt(GetIndexOfBraveRewardsItem(),
-                             IDC_SHOW_BRAVE_REWARDS,
-                             IDS_SHOW_BRAVE_REWARDS);
-  }
-
-  // Insert wallet menu after download menu.
-  if (IsCommandIdEnabled(IDC_SHOW_BRAVE_WALLET)) {
-    InsertItemWithStringIdAt(GetIndexOfCommandId(IDC_SHOW_DOWNLOADS) + 1,
-                             IDC_SHOW_BRAVE_WALLET,
-                             IDS_SHOW_BRAVE_WALLET);
-  }
-
   // Insert sync menu
   if (IsCommandIdEnabled(IDC_SHOW_BRAVE_SYNC)) {
     InsertItemWithStringIdAt(GetIndexOfBraveSyncItem(),
@@ -118,30 +105,9 @@ int BraveAppMenuModel::GetIndexOfBraveAdBlockItem() const {
   if (adblock_item_index != -1)
     return adblock_item_index + 1;
 
-  adblock_item_index = GetIndexOfCommandId(IDC_SHOW_BRAVE_WALLET);
-  if (adblock_item_index != -1)
-    return adblock_item_index + 1;
-
   adblock_item_index = GetIndexOfCommandId(IDC_SHOW_DOWNLOADS);
   DCHECK_NE(-1, adblock_item_index) << "No download item";
   return adblock_item_index + 1;
-}
-
-int BraveAppMenuModel::GetIndexOfBraveRewardsItem() const {
-  // Insert rewards menu at first of this section. If history menu is not
-  // available, check below items.
-  int rewards_index = -1;
-  rewards_index = GetIndexOfCommandId(IDC_RECENT_TABS_MENU);
-  if (rewards_index != -1)
-    return rewards_index;
-
-  rewards_index = GetIndexOfCommandId(IDC_BOOKMARKS_MENU);
-  if (rewards_index != -1)
-    return rewards_index;
-
-  rewards_index = GetIndexOfCommandId(IDC_SHOW_DOWNLOADS);
-  DCHECK_NE(-1, rewards_index) << "No download item";
-  return rewards_index;
 }
 
 int BraveAppMenuModel::GetIndexOfBraveSyncItem() const {
@@ -149,10 +115,6 @@ int BraveAppMenuModel::GetIndexOfBraveSyncItem() const {
   // available, check above items.
   int sync_index = -1;
   sync_index = GetIndexOfCommandId(IDC_MANAGE_EXTENSIONS);
-  if (sync_index != -1)
-    return sync_index + 1;
-
-  sync_index = GetIndexOfCommandId(IDC_SHOW_BRAVE_WALLET);
   if (sync_index != -1)
     return sync_index + 1;
 

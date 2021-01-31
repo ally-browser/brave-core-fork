@@ -10,7 +10,6 @@
 #include "base/feature_list.h"
 #include "base/strings/string_number_conversions.h"
 #include "brave/components/brave_perf_predictor/browser/buildflags.h"
-#include "brave/components/brave_shields/browser/brave_shields_p3a.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_shields/common/brave_shield_constants.h"
 #include "brave/components/brave_shields/common/brave_shield_utils.h"
@@ -35,13 +34,9 @@ namespace brave_shields {
 namespace {
 
 void RecordShieldsToggled(PrefService* local_state) {
-  ::brave_shields::MaybeRecordShieldsUsageP3A(::brave_shields::kShutOffShields,
-                                              local_state);
 }
 
 void RecordShieldsSettingChanged(PrefService* local_state) {
-  ::brave_shields::MaybeRecordShieldsUsageP3A(
-      ::brave_shields::kChangedPerSiteShields, local_state);
 }
 
 

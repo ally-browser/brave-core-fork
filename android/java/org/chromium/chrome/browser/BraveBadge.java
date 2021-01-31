@@ -16,13 +16,11 @@ import org.chromium.chrome.R;
 public class BraveBadge extends TextView {
   /**
    * Update by using the following
-   * BraveBadge.update(this, BraveBadge.BadgeType.REWARDS, 77);
    * BraveBadge.update(this, BraveBadge.BadgeType.SHIELDS, 88);
    */
 
     public enum BadgeType {
-        SHIELDS("shields"),
-        REWARDS("rewards");
+        SHIELDS("shields");
 
         private final String type;
 
@@ -66,7 +64,6 @@ public class BraveBadge extends TextView {
         BraveBadge toHide;
 
         // Set Color
-        //if (badgeType == BadgeType.SHIELDS) {
             if (counter < 10) {
               toShow = (BraveBadge) activity.findViewById(R.id.brave_shields_badge_small);
               toHide = (BraveBadge) activity.findViewById(R.id.brave_shields_badge_large);
@@ -74,15 +71,6 @@ public class BraveBadge extends TextView {
               toShow = (BraveBadge) activity.findViewById(R.id.brave_shields_badge_large);
               toHide = (BraveBadge) activity.findViewById(R.id.brave_shields_badge_small);
             }
-        // } else {
-        //     if (counter < 10) {
-        //       toShow = (BraveBadge) activity.findViewById(R.id.brave_rewards_badge_small);
-        //       toHide = (BraveBadge) activity.findViewById(R.id.brave_rewards_badge_large);
-        //     } else {
-        //       toShow = (BraveBadge) activity.findViewById(R.id.brave_rewards_badge_large);
-        //       toHide = (BraveBadge) activity.findViewById(R.id.brave_rewards_badge_small);
-        //     }
-        // }
 
         toHide.update(0);
         toShow.update(counter);

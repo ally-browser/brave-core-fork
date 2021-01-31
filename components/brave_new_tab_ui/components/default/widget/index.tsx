@@ -13,8 +13,6 @@ export interface WidgetProps {
   hideWidget?: HideWidgetFunction
   preventFocus?: boolean
   textDirection: string
-  isCrypto?: boolean
-  isCryptoTab?: boolean
   widgetTitle?: string
   hideMenu?: boolean
   isForeground?: boolean
@@ -52,8 +50,6 @@ const createWidget = <P extends object>(WrappedComponent: React.ComponentType<P>
         hideWidget,
         textDirection,
         preventFocus,
-        isCrypto,
-        isCryptoTab,
         widgetTitle,
         hideMenu,
         isForeground,
@@ -71,8 +67,6 @@ const createWidget = <P extends object>(WrappedComponent: React.ComponentType<P>
           textDirection={textDirection}
         >
           <StyledWidget
-            isCrypto={isCrypto}
-            isCryptoTab={isCryptoTab}
             widgetMenuPersist={widgetMenuPersist}
             preventFocus={preventFocus}
             paddingType={paddingType}

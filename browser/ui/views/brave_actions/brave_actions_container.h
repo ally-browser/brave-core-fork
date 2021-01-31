@@ -11,8 +11,6 @@
 #include <string>
 
 #include "brave/browser/extensions/api/brave_action_api.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
-#include "brave/components/brave_rewards/browser/rewards_service.h"
 #include "chrome/browser/extensions/api/extension_action/extension_action_api.h"
 #include "chrome/browser/ui/browser.h"
 #include "chrome/browser/ui/toolbar/toolbar_action_view_controller.h"
@@ -23,13 +21,8 @@
 #include "extensions/common/extension.h"
 #include "ui/views/view.h"
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-#include "brave/browser/ui/views/brave_actions/brave_rewards_action_stub_view.h"
-#endif
-
 class BraveActionViewController;
 class BraveActionsContainerTest;
-class RewardsBrowserTest;
 
 namespace extensions {
 class ExtensionActionManager;
@@ -46,10 +39,7 @@ class BraveActionsContainer : public views::View,
                               public extensions::BraveActionAPI::Observer,
                               public extensions::ExtensionActionAPI::Observer,
                               public extensions::ExtensionRegistryObserver,
-                              public ToolbarActionView::Delegate,
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-                              public BraveRewardsActionStubView::Delegate
-#endif
+                              public ToolbarActionView::Delegate
                               {
  public:
   BraveActionsContainer(Browser* browser, Profile* profile);
@@ -77,11 +67,6 @@ class BraveActionsContainer : public views::View,
                            const gfx::Point& press_pt,
                            const gfx::Point& p) override;
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  // BraveRewardsActionStubView::Delegate
-  void OnRewardsStubButtonClicked() override;
-#endif
-
   // ExtensionRegistryObserver:
   void OnExtensionLoaded(content::BrowserContext* browser_context,
                          const extensions::Extension* extension) override;
@@ -101,15 +86,11 @@ class BraveActionsContainer : public views::View,
       content::WebContents* web_contents,
       content::BrowserContext* browser_context) override;
 
-  // Brave Rewards preferences change observers callback.
-  void OnBraveRewardsPreferencesChanged();
-
   // views::View:
   void ChildPreferredSizeChanged(views::View* child) override;
 
  private:
   friend class ::BraveActionsContainerTest;
-  friend class ::RewardsBrowserTest;
 
   class EmptyExtensionsContainer;
 
@@ -138,8 +119,6 @@ class BraveActionsContainer : public views::View,
   bool IsContainerAction(const std::string& id) const;
   void AddAction(const extensions::Extension* extension);
   void AddAction(const std::string& id);
-  bool ShouldAddBraveRewardsAction() const;
-  void AddActionStubForRewards();
   void RemoveAction(const std::string& id);
   void ShowAction(const std::string& id, bool show);
   bool IsActionShown(const std::string& id) const;
@@ -151,8 +130,6 @@ class BraveActionsContainer : public views::View,
       std::unique_ptr<std::string> ui_relative_path) override;
 
   bool should_hide_ = false;
-
-  bool is_rewards_pressed_ = false;
 
   // The Browser this LocationBarView is in.  Note that at least
   // chromeos::SimpleWebViewDialog uses a LocationBarView outside any browser
@@ -182,13 +159,7 @@ class BraveActionsContainer : public views::View,
                  extensions::BraveActionAPI::Observer>
       brave_action_observer_;
 
-  // Listen for Brave Rewards preferences changes.
-  BooleanPrefMember brave_rewards_enabled_;
-  BooleanPrefMember hide_brave_rewards_button_;
-
   std::unique_ptr<EmptyExtensionsContainer> empty_extensions_container_;
-
-  brave_rewards::RewardsService* rewards_service_;
 
   base::WeakPtrFactory<BraveActionsContainer> weak_ptr_factory_;
 

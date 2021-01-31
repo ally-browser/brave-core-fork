@@ -29,20 +29,13 @@ type AppProps = {
 type PageProps = {
   showClock: boolean
   showStats: boolean
-  showRewards: boolean
-  showBinance: boolean
-  showTogether: boolean
   showTopSites: boolean
-  showBrandedWallpaper: boolean
 } & HasImageProps
 
 function getItemRowCount (p: PageProps): number {
-  let right = (p.showClock ? 1 : 0) + (p.showRewards ? 2 : 0)
+  let right = (p.showClock ? 1 : 0)
   let left = (p.showStats ? 1 : 0) + (p.showTopSites ? 1 : 0)
   // Has space for branded logo to sit next to something on right?
-  if (p.showBrandedWallpaper && left >= right) {
-    left++
-  }
   return Math.max(left, right) + 1 // extra 1 for footer
 }
 
@@ -51,7 +44,7 @@ const StyledPage = styled<PageProps, 'div'>('div')`
      so that the footer goes in the correct location always,
      yet can still merge upwards to previous rows. */
   --ntp-item-row-count: ${getItemRowCount};
-  --ntp-extra-footer-rows: ${p => p.showBrandedWallpaper ? 1 : 0};
+  --ntp-extra-footer-rows: 0;
   --ntp-space-rows: 0;
   --ntp-page-rows: calc(var(--ntp-item-row-count) + var(--ntp-space-rows));
   --ntp-page-padding: 12px;
@@ -238,14 +231,6 @@ export const GridItemNavigation = styled('section')`
     margin: 0;
     align-self: flex-end;
   }
-`
-
-export const GridItemNavigationBraveToday = styled<{}, 'div'>('div')`
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  margin: 0 auto;
 `
 
 export const Footer = styled<{}, 'footer'>('footer')`

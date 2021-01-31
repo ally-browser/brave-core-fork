@@ -6,7 +6,6 @@
 #include "brave/common/extensions/whitelist.h"
 
 #include "brave/components/brave_component_updater/browser/local_data_files_service.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "extensions/common/constants.h"
 
 // This is a hardcoded list of vetted extensions, mostly
@@ -16,7 +15,6 @@
 // the files managed by the extension whitelist service.
 const std::vector<std::string> kVettedExtensions{
     brave_extension_id,
-    brave_rewards_extension_id,
     brave_webtorrent_extension_id,
     crl_set_extension_id,
     hangouts_extension_id,

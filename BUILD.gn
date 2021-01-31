@@ -1,6 +1,5 @@
 import("//brave/build/cargo.gni")
 import("//brave/build/config.gni")
-import("//brave/components/brave_rewards/browser/buildflags/buildflags.gni")
 import("//build/config/locales.gni")
 import("//build/config/zip.gni")
 import("//build/util/process_version.gni")
@@ -107,9 +106,6 @@ if (is_android) {
       "$root_build_dir/brave_100_percent.pak",
       "$root_build_dir/brave_resources.pak",
       "//brave/LICENSE.html",
-      "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/onboarding_ads.json",
-      "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/onboarding_ads_notification.json",
-      "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/onboarding_rewards.json",
       "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/privacy_protection.json",
       "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/save_data_and_battery.json",
       "//brave/android/java/org/chromium/chrome/browser/onboarding/animations/website_loads_faster.json",
@@ -132,11 +128,6 @@ if (is_mac) {
     # the chrome_framework target so we add it here
     public_configs = [ ":rust_link" ]
     deps = [ "components/brave_extension/extension/brave_extension:brave_extension_framework_bundle_data" ]
-    if (brave_rewards_enabled) {
-      deps += [
-        "components/brave_rewards/resources/extension:framework_bundle_data",
-      ]
-    }
   }
 }
 
@@ -147,10 +138,6 @@ group("unpacked_resources") {
       deps = [
         "//brave/components/brave_extension/extension/brave_extension:locales",
       ]
-      if (brave_rewards_enabled) {
-        deps +=
-            [ "//brave/components/brave_rewards/resources/extension:locales" ]
-      }
     }
   }
 }
@@ -240,32 +227,16 @@ if (!is_mac && !is_android && !is_ios) {
       deps = [
         "//brave/components/brave_extension/extension/brave_extension:locales",
       ]
-      if (brave_rewards_enabled) {
-        deps +=
-            [ "//brave/components/brave_rewards/resources/extension:locales" ]
-      }
 
       public_deps = []
       foreach(locale, locales) {
         # public_deps is used intentionaly because ":create_dist_zip" needs the all dependency
         # of all locale files.
         public_deps += [ ":brave_shields_locales_${locale}" ]
-        if (brave_rewards_enabled) {
-          public_deps += [ ":brave_rewards_locales_${locale}" ]
-        }
       }
     }
 
     foreach(locale, locales) {
-      if (brave_rewards_enabled) {
-        copy("brave_rewards_locales_${locale}") {
-          deps = [ "//brave/components/brave_rewards/resources/extension:locales_$locale" ]
-
-          locale = string_replace(locale, "-", "_")
-          sources = [ "$root_out_dir/resources/brave_rewards/_locales/$locale/messages.json" ]
-          outputs = [ "$brave_dist_dir/resources/brave_rewards/_locales/$locale/{{source_file_part}}" ]
-        }
-      }
       copy("brave_shields_locales_${locale}") {
         deps = [ "//brave/components/brave_extension/extension/brave_extension:locales_$locale" ]
 
@@ -385,9 +356,6 @@ action("create_dist_zips") {
     if (enable_extensions) {
       foreach(locale, locales) {
         inputs += get_target_outputs(":brave_shields_locales_${locale}")
-        if (brave_rewards_enabled) {
-          inputs += get_target_outputs(":brave_rewards_locales_${locale}")
-        }
       }
     }
   }

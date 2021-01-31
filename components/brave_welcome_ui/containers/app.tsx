@@ -12,7 +12,6 @@ import { Page, Panel, SlideContent } from '../components'
 // Component groups
 import WelcomeBox from './screens/welcomeBox'
 import ImportBox from './screens/importBox'
-import RewardsBox from './screens/rewardsBox'
 import SearchBox from './screens/searchBox'
 import ShieldsBox from './screens/shieldsBox'
 import FooterBox from './screens/footerBox'
@@ -74,10 +73,6 @@ export class WelcomePage extends React.Component<Props, State> {
     })
   }
 
-  onClickRewardsGetStarted = () => {
-    this.props.actions.goToTabRequested('chrome://rewards/enable', '_blank')
-  }
-
   onClickSlideBullet = (nextScreen: number) => {
     this.setState({
       currentScreen: nextScreen
@@ -135,7 +130,6 @@ export class WelcomePage extends React.Component<Props, State> {
                 changeDefaultSearchProvider={actions.changeDefaultSearchProvider}
                 searchProviders={welcomeData.searchProviders}
               />
-              <RewardsBox index={5} currentScreen={this.currentScreen} onClick={this.onClickRewardsGetStarted} />
             </SlideContent>
             <FooterBox
               totalScreensSize={totalScreensSize}

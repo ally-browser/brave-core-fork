@@ -12,7 +12,6 @@
 #include "brave/browser/extensions/api/brave_action_api.h"
 #include "brave/browser/webcompat_reporter/webcompat_reporter_dialog.h"
 #include "brave/common/extensions/api/brave_shields.h"
-#include "brave/components/brave_shields/browser/brave_shields_p3a.h"
 #include "brave/components/brave_shields/browser/brave_shields_util.h"
 #include "brave/components/brave_shields/browser/brave_shields_web_contents_observer.h"
 #include "brave/components/brave_shields/common/brave_shield_constants.h"
@@ -422,8 +421,6 @@ BraveShieldsGetNoScriptControlTypeFunction::Run() {
 
 ExtensionFunction::ResponseAction
 BraveShieldsOnShieldsPanelShownFunction::Run() {
-  ::brave_shields::MaybeRecordShieldsUsageP3A(::brave_shields::kClicked,
-                                              g_browser_process->local_state());
   return RespondNow(NoArguments());
 }
 

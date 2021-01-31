@@ -16,45 +16,6 @@ namespace extensions {
 bool BraveExtensionsAPIClient::ShouldHideBrowserNetworkRequest(
     content::BrowserContext* context,
     const WebRequestInfo& request) const {
-  const url::Origin origin = url::Origin::Create(request.url);
-  const base::StringPiece path = request.url.path_piece();
-  if (((origin.DomainIs("sandbox.uphold.com") ||
-        origin.DomainIs("uphold.com")) &&
-       base::StartsWith(path, "/authorize/",
-                        base::CompareCase::INSENSITIVE_ASCII)) ||
-      (origin.DomainIs("api.uphold.com") &&
-       base::StartsWith(path, "/oauth2/token",
-                        base::CompareCase::INSENSITIVE_ASCII))) {
-    return true;  // protected URL
-  }
-
-  // Binance
-  URLPattern pattern1(URLPattern::SCHEME_HTTPS,
-      "https://accounts.binance.com/*/oauth/authorize*");
-  URLPattern pattern2(URLPattern::SCHEME_HTTPS,
-      "https://accounts.binance.com/oauth/token*");
-  if (pattern1.MatchesURL(request.url) || pattern2.MatchesURL(request.url)) {
-    return true;
-  }
-
-  if (request.url.SchemeIs(kBinanceScheme)) {
-    return true;
-  }
-
-  // Gemini
-  URLPattern auth_pattern(URLPattern::SCHEME_HTTPS,
-      "https://exchange.gemini.com/auth*");
-  URLPattern token_pattern(URLPattern::SCHEME_HTTPS,
-      "https://exchange.gemini.com/auth/token*");
-  if (auth_pattern.MatchesURL(request.url) ||
-      token_pattern.MatchesURL(request.url)) {
-    return true;
-  }
-
-  if (request.url.SchemeIs(kGeminiScheme)) {
-    return true;
-  }
-
   return ChromeExtensionsAPIClient::ShouldHideBrowserNetworkRequest(context,
                                                                     request);
 }

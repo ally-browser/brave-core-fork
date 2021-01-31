@@ -45,16 +45,6 @@ bool IsRegularProfile(content::BrowserContext* profile);
 
 bool IsTorDisabledForProfile(Profile* profile);
 
-// Specifically used to record if sponsored images are enabled.
-// Called from BraveAppearanceHandler and BraveNewTabMessageHandler
-void RecordSponsoredImagesEnabledP3A(Profile* profile);
-
-// Records default values for some histograms.
-//
-// For profile agnostic values (ex: local_state) see
-// browser/brave_browser_main_extra_parts.cc
-void RecordInitialP3AValues(Profile* profile);
-
 // Used for capturing the value of kBraveCurrentDataVersion so that the
 // default search engine for that version can be determined. New profiles
 // will get locked into newer versions when created. Existing profiles

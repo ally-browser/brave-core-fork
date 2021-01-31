@@ -157,9 +157,6 @@
   </translations>
   <release seq="1">
     <messages fallback_to_english="true">
-      <message name="IDS_SHOW_BRAVE_REWARDS" desc="The show Brave Rewards menu in the app menu">
-        Brave Rewards
-      </message>
       <message name="IDS_SHOW_BRAVE_ADBLOCK" desc="The show Brave Ad Block menu in the app menu">
         Brave Ad Block
       </message>
@@ -168,9 +165,6 @@
       </message>
       <message name="IDS_SHOW_BRAVE_SYNC" desc="The show brave sync menu in the app menu">
         Sync
-      </message>
-      <message name="IDS_SHOW_BRAVE_WALLET" desc="The show Brave Wallet menu item (app menu)">
-        Crypto Wallets
       </message>
       <message name="IDS_ADD_NEW_PROFILE" desc="The app menu item to create a new User Profile">
         Create a New Profile
@@ -264,9 +258,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
       <message name="IDS_SETTINGS_APPEARANCE_SETTINGS_LOCATION_BAR_IS_WIDE" desc="The label for whether the location bar should display wide or not">
         Use wide address bar
       </message>
-      <message name="IDS_SETTINGS_HIDE_BRAVE_REWARDS_BUTTON_LABEL" desc="The label for settings switch controlling the visibility of Brave Rewards button">
-        Hide Brave Rewards button
-      </message>
       <message name="IDS_SETTINGS_ALWAYS_SHOW_BOOKMARK_BAR_ON_NTP" desc="The label for settings switch controlling the visibility of bookmarks bar on NTP">
         Always show bookmarks on new tab page
       </message>
@@ -296,9 +287,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
       <!-- New Tab Page -->
       <message name="IDS_SETTINGS_NEW_TAB" desc="The text label for the New Tab settings page">
        New Tab Page
-      </message>
-      <message name="IDS_SETTINGS_NEW_TAB_BRAVE_REWARDS" desc="The label for Brave Rewards show/hide feature toggle">
-        Brave Rewards
       </message>
       <message name="IDS_SETTINGS_NEW_TAB_NEW_TAB_PAGE_SHOWS" desc="The label for New Tab Page shows customization">
         New tab page shows
@@ -373,12 +361,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
       </if>
       <message name="IDS_PROFILES_TOR_PROFILE_NAME" desc="Name of the Tor profile.">
         Tor
-      </message>
-      <message name="IDS_SERVICE_BAT_ADS" desc="The bat ads utility process">
-        Bat Ads Service
-      </message>
-      <message name="IDS_UTILITY_PROCESS_LEDGER_NAME" desc="The utility process running ledger">
-        Bat Ledger Service
       </message>
       <message name="IDS_SETTINGS_BRAVE_GET_STARTED_TITLE" desc="The title for the Get Started section in settings">
         Get started
@@ -679,24 +661,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
       <message name="IDS_SETTINGS_WEBTORRENT_ENABLED_DESC" desc="The description for WebTorrent switch in settings">
         Uses WebTorrent to display torrents directly in the browser. Supports torrent files and magnet links.
       </message>
-      <message name="IDS_BRAVE_WALLET_WEB3_PROVIDER_ASK" desc="Select control value for which web3 provider to use">
-        Ask
-      </message>
-      <message name="IDS_BRAVE_WALLET_WEB3_PROVIDER_NONE" desc="Select control value for which web3 provider to use">
-        None
-      </message>
-      <message name="IDS_BRAVE_WALLET_WEB3_PROVIDER_CRYPTO_WALLETS" desc="Select control value for which web3 provider to use">
-        Crypto Wallets
-      </message>
-      <message name="IDS_BRAVE_WALLET_WEB3_PROVIDER_METAMASK" desc="Select control value for which web3 provider to use">
-        MetaMask
-      </message>
-      <message name="IDS_SETTINGS_BRAVE_WEB3_PROVIDER_DESC" desc="The description for Brave web3 provider select control in settings">
-        Ethereum provider for using Dapps
-      </message>
-      <message name="IDS_SETTINGS_LOAD_CRYPTO_WALLETS_ON_STARTUP" desc="The description for always loading the Crypto Wallets extension on startup">
-        Load Crypto Wallets on startup
-      </message>
       <message name="IDS_SETTINGS_GOOGLE_LOGIN_FOR_EXTENSIONS" desc="Label for a switch control which allows Google login for extension">
         Allow Google login for extensions
       </message>
@@ -930,41 +894,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
             Avatar Bonbon Ninja
         </message>
       </if>
-      <!-- P3A -->
-      <message name="IDS_BRAVE_CONFIRM_P3A_INFO_BAR" desc="Text that shows on the info bar where user acknowledges the P3A message">
-        Brave uses completely private product analytics to estimate the overall usage of certain features
-      </message>
-      <message name="IDS_BRAVE_CONFIRM_P3A_INFO_BAR_ACKNOWLEDGE" desc="OK button that shows on the info bar where user acknowledges the P3A message">
-        Got it
-      </message>
-      <message name="IDS_BRAVE_CONFIRM_P3A_INFO_BAR_DISABLE" desc="Disable button that shows on the info bar where user acknowledges the P3A message">
-        Disable
-      </message>
-      <message name="IDS_BRAVE_P3A_ENABLE_SETTING" desc="Description that shows in settings for toggling P3A">
-        Automatically send completely private product analytics to Brave
-      </message>
-      <message name="IDS_BRAVE_P3A_ENABLE_SETTING_SUBITEM" desc="Description that shows under main toggle setting for P3A">
-        This anonymous info only lets Brave estimate the overall usage of certain features.
-      </message>
-      <!-- Web3 detection -->
-      <message name="IDS_BRAVE_CRYPTO_WALLETS_LAZY_LOAD_TEXT" desc="Text that shows on the info bar when a Dapp is detected">
-        Would you like to start Crypto Wallets for Ethereum support?
-      </message>
-      <message name="IDS_BRAVE_CRYPTO_WALLETS_INFOBAR_TEXT" desc="Text that shows on the info bar when a Dapp is detected">
-        Set up Crypto Wallets to interact with this app and others like it.
-      </message>
-      <message name="IDS_BRAVE_CRYPTO_WALLETS_SETUP_CRYPTO_WALLETS" desc="Setup Crypto Wallets">
-        Setup Crypto Wallets
-      </message>
-       <message name="IDS_BRAVE_CRYPTO_WALLETS_START_AND_RELOAD" desc="Start Crypto Wallets and reload">
-        Start Crypto Wallets and reload
-      </message>
-      <message name="IDS_BRAVE_CRYPTO_WALLETS_SETTINGS" desc="Open Crypto Wallets settings">
-        Settings
-      </message>
-      <message name="IDS_BRAVE_CRYPTO_WALLETS_DONT_ASK" desc="Sets provider to none">
-        Don't ask again
-      </message>
       <!-- IPFS -->
       <message name="IDS_BRAVE_IPFS_INSTALL" desc="Install IPFS daemon infobar text">
         IPFS resources detected. Would you like Brave to load them using a local IPFS node?
@@ -1029,9 +958,6 @@ By installing this extension, you are agreeing to the Google Widevine Terms of U
       </message>
       <message name="IDS_BOOKMARKS_NO_ITEMS" desc="Text shown when the user has no bookmarks">
         For quick access, place your bookmarks here on the bookmarks bar.
-      </message>
-      <message name="IDS_SETTINGS_RESET_REWARDS_DATA" desc="The label for opening rewards manage wallet dialog">
-        Reset Brave Rewards data...
       </message>
     </messages>
   </release>

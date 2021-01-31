@@ -48,13 +48,6 @@ public class BraveOnboardingNotification extends BroadcastReceiver {
 
     public static void showOnboardingDialog(Activity activity) {
         Context context = activity.getApplicationContext();
-        BraveAdsNotificationDialog.displayAdsNotification(
-            activity,
-            BRAVE_ONBOARDING_NOTIFICATION_TAG,
-            getNotificationUrl(),
-            context.getString(R.string.brave_ui_brave_rewards),
-            context.getString(R.string.this_is_your_first_ad)
-        );
     }
 
     public static void showOnboardingNotification(Activity activity) {
@@ -62,24 +55,6 @@ public class BraveOnboardingNotification extends BroadcastReceiver {
         if (context == null) return;
         NotificationManagerProxyImpl notificationManager =
             new NotificationManagerProxyImpl(context);
-
-        NotificationBuilderBase notificationBuilder =
-            new BraveAdsNotificationBuilder(context)
-        .setTitle(context.getString(R.string.brave_ui_brave_rewards))
-        .setBody(context.getString(R.string.this_is_your_first_ad))
-        .setSmallIconId(R.drawable.ic_chrome)
-        .setPriority(Notification.PRIORITY_HIGH)
-        .setDefaults(Notification.DEFAULT_ALL)
-        .setContentIntent(getDeepLinkIntent(context))
-        .setOrigin(getNotificationUrl());
-
-        NotificationWrapper notification = notificationBuilder.build(new NotificationMetadata(
-                                              NotificationUmaTracker.SystemNotificationType
-                                              .UNKNOWN /* Underlying code doesn't track UNKNOWN */,
-                                              BRAVE_ONBOARDING_NOTIFICATION_TAG /* notificationTag */,
-                                              BRAVE_ONBOARDING_NOTIFICATION_ID /* notificationId */
-                                          ));
-        notificationManager.notify(notification);
     }
 
     public static PendingIntentProvider getDeepLinkIntent(Context context) {
@@ -96,7 +71,6 @@ public class BraveOnboardingNotification extends BroadcastReceiver {
         BraveActivity braveActivity = BraveActivity.getBraveActivity();
         if (action != null && action.equals(DEEP_LINK)) {
             if (braveActivity != null) {
-                braveActivity.openRewardsPanel();
                 Intent launchIntent = new Intent(Intent.ACTION_MAIN);
                 launchIntent.setPackage(context.getPackageName());
                 launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -110,9 +84,6 @@ public class BraveOnboardingNotification extends BroadcastReceiver {
               showOnboardingDialog(braveActivity);
             } else {
               showOnboardingNotification(braveActivity);
-            }
-            if (braveActivity != null) {
-                braveActivity.hideRewardsOnboardingIcon();
             }
         }
     }

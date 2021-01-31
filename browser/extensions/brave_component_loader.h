@@ -9,18 +9,11 @@
 #include <string>
 
 #include "base/files/file_path.h"
-#include "brave/components/brave_rewards/browser/buildflags/buildflags.h"
-#include "brave/components/brave_wallet/buildflags/buildflags.h"
 #include "chrome/browser/extensions/component_loader.h"
 #include "components/prefs/pref_change_registrar.h"
 
 class PrefService;
 class Profile;
-
-namespace brave_rewards {
-class RewardsService;
-}
-
 
 namespace extensions {
 
@@ -38,12 +31,6 @@ class BraveComponentLoader : public ComponentLoader {
   void AddDefaultComponentExtensions(bool skip_session_components) override;
   void OnComponentRegistered(std::string extension_id);
 
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  void AddRewardsExtension();
-#endif
-#if BUILDFLAG(BRAVE_WALLET_ENABLED)
-  void AddEthereumRemoteClientExtension();
-#endif
   void AddWebTorrentExtension();
   void OnComponentReady(std::string extension_id,
     bool allow_file_access,
@@ -59,10 +46,6 @@ class BraveComponentLoader : public ComponentLoader {
 #if BUILDFLAG(ENABLE_HANGOUT_SERVICES_EXTENSION)
   void AddHangoutServicesExtension() override;
 #endif  // BUILDFLAG(ENABLE_HANGOUT_SERVICES_EXTENSION)
-
-#if BUILDFLAG(BRAVE_REWARDS_ENABLED)
-  void CheckRewardsStatus();
-#endif
 
   void ReinstallAsNonComponent(std::string extension_id);
 

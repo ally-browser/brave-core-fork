@@ -42,21 +42,6 @@ public class BraveUpgradeJobIntentService extends JobIntentService {
                     new BrowserStartupController.StartupCallback() {
                         @Override
                         public void onSuccess() {
-                            if (ChromeFeatureList.isEnabled(BraveFeatureList.BRAVE_REWARDS)
-                                    && BravePrefServiceBridge.getInstance()
-                                               .getSafetynetCheckFailed()) {
-                                Callback<Boolean> callback = value -> {
-                                    if (value == null || !value.booleanValue()) {
-                                        return;
-                                    }
-                                    // Reset flag and update UI
-                                    BravePrefServiceBridge.getInstance().setSafetynetCheckFailed(
-                                            false);
-                                    TabUtils.enableRewardsButton();
-                                };
-                                // Re-perform safetynet check
-                                SafetyNetCheck.updateSafetynetStatus(callback);
-                            }
                         }
 
                         @Override

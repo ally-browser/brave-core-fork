@@ -40,16 +40,6 @@ bool IsSearchEvent(const AutocompleteMatch& match) {
   }
   return false;
 }
-
-void RecordSearchEventP3A(uint64_t number_of_searches) {
-  constexpr int kIntervals[] = {0, 5, 10, 20, 50, 100, 500};
-  const int* it =
-      std::lower_bound(kIntervals, std::end(kIntervals), number_of_searches);
-  const int answer = it - kIntervals;
-  UMA_HISTOGRAM_EXACT_LINEAR("Brave.Omnibox.SearchCount", answer,
-                             base::size(kIntervals));
-}
-
 }  // namespace
 
 BraveOmniboxClientImpl::BraveOmniboxClientImpl(
@@ -58,12 +48,6 @@ BraveOmniboxClientImpl::BraveOmniboxClientImpl(
     : ChromeOmniboxClient(controller, profile),
       profile_(profile),
       scheme_classifier_(profile) {
-  // Record initial search count p3a value.
-  const base::Value* search_p3a =
-      profile_->GetPrefs()->GetList(kSearchCountPrefName);
-  if (search_p3a->GetList().size() == 0) {
-    RecordSearchEventP3A(0);
-  }
 }
 
 BraveOmniboxClientImpl::~BraveOmniboxClientImpl() {}
@@ -86,6 +70,5 @@ void BraveOmniboxClientImpl::OnInputAccepted(const AutocompleteMatch& match) {
     // TODO(iefremov): Optimize this.
     WeeklyStorage storage(profile_->GetPrefs(), kSearchCountPrefName);
     storage.AddDelta(1);
-    RecordSearchEventP3A(storage.GetWeeklySum());
   }
 }

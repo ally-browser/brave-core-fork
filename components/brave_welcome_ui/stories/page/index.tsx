@@ -12,7 +12,6 @@ import WelcomeBox from './screens/welcomeBox'
 import ImportBox from './screens/importBox'
 import ShieldsBox from './screens/shieldsBox'
 import SearchBox from './screens/searchBox'
-import RewardsBox from './screens/rewardsBox'
 import FooterBox from './screens/footerBox'
 
 // Images
@@ -86,10 +85,6 @@ export default class WelcomePage extends React.PureComponent<Props, State> {
     console.log('CONFIRMED DEFAULT SEARCH ENGINE!')
   }
 
-  onClickRewardsGetStarted = () => {
-    console.log('SENT TO REWARDS PAGE')
-  }
-
   get backgroundPosition () {
     switch (this.state.currentScreen) {
       case 1:
@@ -128,7 +123,6 @@ export default class WelcomePage extends React.PureComponent<Props, State> {
               <ImportBox index={2} currentScreen={currentScreen} onClick={this.onClickImport} />
               <ShieldsBox index={3} currentScreen={currentScreen} />
               <SearchBox index={4} currentScreen={currentScreen} onClick={this.onClickConfirmDefaultSearchEngine} fakeOnChange={this.onChangeDefaultSearchEngine} isDefaultSearchGoogle={isDefaultSearchGoogle}/>
-              <RewardsBox index={5} currentScreen={currentScreen} onClick={this.onClickRewardsGetStarted} />
             </SlideContent>
             <FooterBox
               totalScreensSize={this.totalScreensSize}

@@ -81,20 +81,4 @@ public class TabUtils {
             braveActivity.getActivityTab().loadUrl(loadUrlParams);
         }
     }
-
-    public static void enableRewardsButton() {
-        BraveActivity braveActivity = BraveActivity.getBraveActivity();
-        if (braveActivity == null || braveActivity.getToolbarManager() == null) {
-            return;
-        }
-        View toolbarView = braveActivity.findViewById(R.id.toolbar);
-        if (toolbarView == null) {
-            return;
-        }
-        FrameLayout rewardsLayout = toolbarView.findViewById(R.id.brave_rewards_button_layout);
-        if (rewardsLayout == null) {
-            return;
-        }
-        rewardsLayout.setVisibility(View.VISIBLE);
-    }
 }

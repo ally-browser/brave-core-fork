@@ -11,17 +11,12 @@
 
 #include "base/i18n/rtl.h"
 #include "base/strings/utf_string_conversions.h"
-#include "brave/browser/ntp_background_images/view_counter_service_factory.h"
 #include "brave/browser/profiles/profile_util.h"
 #include "brave/browser/ui/webui/new_tab_page/brave_new_tab_ui.h"
 #include "brave/common/pref_names.h"
-#include "brave/components/ntp_background_images/browser/ntp_background_images_data.h"
-#include "brave/components/ntp_background_images/browser/view_counter_service.h"
 #include "chrome/browser/profiles/profile.h"
 #include "chrome/browser/search/instant_service.h"
 #include "chrome/browser/search/instant_service_factory.h"
-
-using ntp_background_images::ViewCounterServiceFactory;
 
 // NOTE: InstantService methods used here will eventually be moved to:
 // chrome/browser/ui/webui/new_tab_page/new_tab_page_handler.h
@@ -86,30 +81,6 @@ void InstantServiceMessageHandler::MostVisitedInfoChanged(
   base::Value result(base::Value::Type::DICTIONARY);
   base::Value tiles(base::Value::Type::LIST);
   int tile_id = 1;
-
-  // Super Referral feature only present in regular tabs (not private tabs)
-  auto* service = ViewCounterServiceFactory::GetForProfile(profile_);
-  if (service) {
-    for (auto& top_site : service->GetTopSitesVectorForWebUI()) {
-      base::Value tile_value(base::Value::Type::DICTIONARY);
-      if (top_site.name.empty()) {
-        tile_value.SetStringKey("title", top_site.destination_url);
-        tile_value.SetIntKey("title_direction", base::i18n::LEFT_TO_RIGHT);
-      } else {
-        tile_value.SetStringKey("title", top_site.name);
-        tile_value.SetIntKey("title_direction",
-            base::i18n::GetFirstStrongCharacterDirection(
-                base::UTF8ToUTF16(top_site.name)));
-      }
-      tile_value.SetIntKey("id", tile_id++);
-      tile_value.SetStringKey("url", top_site.destination_url);
-      tile_value.SetStringKey("favicon", top_site.image_path);
-      tile_value.SetBoolKey("defaultSRTopSite", true);
-      tile_value.SetIntKey(
-          "source", static_cast<int32_t>(ntp_tiles::TileTitleSource::INFERRED));
-      tiles.Append(std::move(tile_value));
-    }
-  }
 
   // See chrome/common/search/instant_types.h for more info
   for (auto& tile : info.items) {

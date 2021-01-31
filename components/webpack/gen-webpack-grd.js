@@ -11,28 +11,6 @@ function getIncludesString (idPrefix, fileList) {
   return includesString
 }
 
-
-function getGrdString (name = 'brave_rewards_resources', idPrefix = 'IDR_BRAVE_REWARDS', fileList = []) {
-  const includesString = getIncludesString(idPrefix, fileList)
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<grit latest_public_release="0" current_release="1" output_all_resource_defines="false">
-  <outputs>
-    <output filename="grit/${name}_generated.h" type="rc_header">
-      <emit emit_type='prepend'></emit>
-    </output>
-    <output filename="grit/${name}_generated_map.cc" type="resource_file_map_source" />
-    <output filename="grit/${name}_generated_map.h" type="resource_map_header" />
-    <output filename="${name}_generated.pak" type="data_package" />
-  </outputs>
-  <release seq="1">
-    <includes>
-      ${includesString}
-    </includes>
-  </release>
-</grit>
-`
-}
-
 // Returns Promise<string[]>
 async function getFileListDeep (dirPath) {
   const dirItems = await fs.readdir(dirPath)
